@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOZ&gt;sistems</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body style="background-image: url('https://drive.google.com/uc?export=download&id=1qp5Z2PWswrEQCPxhYccrJ5GmpN9Z2Fbs'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+    <header class="site-header">
+      <div class="logo">
+        <img src="https://drive.google.com/uc?export=download&id=1qp5Z2PWswrEQCPxhYccrJ5GmpN9Z2Fbs" alt="Logo da MOZ&gt;sistems" class="logo-image">
+        <a href="#home">MOZ&gt;sistems</a>
+      </div>
+      <nav aria-label="Navegação principal">
+        <ul class="main-nav">
+          <li><a href="#home">Início</a></li>
+          <li><a href="#about">Livro Diário</a></li>
+          <li><a href="#balancete">Balancete</a></li>
+          <li><a href="#razao">Razão</a></li>
+          <li><a href="#balanco">Balanço</a></li>
+          <li><a href="#plano-de-contas">Plano de Contas</a></li>
+        </ul>
+      </nav>
+    </header>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>MOZ.sistems</h1>
+      </div>
+    </section>
+
+    <section class="section about">
+      <div class="contact-details">
+        <h3>Livro Diário</h3>
+        <div id="edit-mode-indicator" style="margin-bottom: 0.75rem; font-weight: 700; color:#2563eb; min-height:1.25rem;"></div>
+        <table id="entries-table" class="entries-table">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Data</th>
+              <th>Conta a Debitar</th>
+              <th>Conta a Creditar</th>
+              <th>Centro/Código</th>
+              <th>Descrição</th>
+              <th>Débito</th>
+              <th>Crédito</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="entry-input-row">
+              <td><span id="entry-number-preview" style="font-weight: bold; color: #0f172a;">001</span></td>
+              <td><input class="diary-input" type="date" id="entry-date" required></td>
+              <td><input class="diary-input" type="text" id="entry-debit-account" list="account-list" required placeholder="Ex: Caixa"></td>
+              <td><input class="diary-input" type="text" id="entry-credit-account" list="account-list" required placeholder="Ex: Vendas"></td>
+              <td><input class="diary-input" type="text" id="entry-cost-center" required placeholder="Ex: Centro A" title="Informe o centro ou código do custo para agrupar o lançamento"></td>
+              <td><input class="diary-input" type="text" id="entry-description" required placeholder="Ex: Venda de mercadorias"></td>
+              <td><input class="diary-input" type="number" id="entry-debit-amount" step="0.01" min="0" placeholder="0.00"></td>
+              <td><input class="diary-input" type="number" id="entry-credit-amount" step="0.01" min="0" placeholder="0.00"></td>
+              <td>
+                <button id="add-entry-button" class="button" type="button">Adicionar</button>
+                <button id="clear-entry-button" class="button" type="button" style="margin-left:0.4rem; background-color:#6b7280; color:white;">Limpar</button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody id="entries-table-body"></tbody>
+        </table>
+        <p id="entries-summary">Total Receitas: 0,00 MZN · Total Despesas: 0,00 MZN · Saldo: 0,00 MZN</p>
+        <div id="form-status" style="margin-top:0.75rem; min-height:1.2rem; color:#dc2626; font-weight:600;"></div>
+        <div style="margin-top: 1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <button id="clear-all-button" class="button" type="button" style="background-color: #dc2626;">Limpar Tudo</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about" id="balancete">
+      <div class="contact-details">
+        <span id="razao"></span>
+        <span id="balanco"></span>
+        <h3>Balancete</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <label style="display:flex; flex-direction:column; gap:.4rem; font-weight:600; font-size:.95rem;">
+            Data inicial
+            <input type="date" id="filter-start-date" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:.4rem; font-weight:600; font-size:.95rem;">
+            Data final
+            <input type="date" id="filter-end-date" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:.4rem; font-weight:600; font-size:.95rem;">
+            Conta
+            <input type="text" id="filter-account" placeholder="Ex: Caixa" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:.4rem; font-weight:600; font-size:.95rem;">
+            Centro/Código
+            <input type="text" id="filter-cost-center" placeholder="Ex: Centro A" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;" />
+          </label>
+          <div style="display:flex; align-items:flex-end;">
+            <button id="clear-filters-button" class="button" type="button" style="background-color: #f59e0b;">Limpar Filtros</button>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <button id="btn-balancete-verificacao" class="button" style="background-color: #2563eb;">Balancete de Verificação</button>
+          <button id="btn-balancete-saldos" class="button" style="background-color: #2563eb;">Balancete de Saldos</button>
+          <button id="btn-balancete-movimentos" class="button" style="background-color: #2563eb;">Balancete com Movimentos</button>
+          <button id="btn-balancete-periodo" class="button" style="background-color: #2563eb;">Balancete por Período</button>
+          <button id="btn-balancete-conta" class="button" style="background-color: #2563eb;">Balancete por Conta</button>
+          <button id="btn-balancete-conta-periodo" class="button" style="background-color: #2563eb;">Balancete Conta+Período</button>
+          <button id="btn-balancete-custo" class="button" style="background-color: #2563eb;">Balancete Centro/Código por Período</button>
+          <button id="btn-razao" class="button" style="background-color: #2563eb;">Razão</button>
+          <button id="btn-balanco" class="button" style="background-color: #2563eb;">Balanço</button>
+          <button id="btn-export-csv" class="button" style="background-color: #10b981;">Exportar CSV</button>
+          <button id="btn-print-report" class="button" style="background-color: #4b5563;">Imprimir Relatório</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <button id="btn-nirf-geral" class="button" style="background-color: #8b5cf6;">Relatório NIRF Geral</button>
+          <button id="btn-nirf-gastos" class="button" style="background-color: #ef4444;">Gastos / Perdas (Classe 6)</button>
+          <button id="btn-nirf-receitas" class="button" style="background-color: #14b8a6;">Rendimentos / Ganhos (Classe 7)</button>
+          <button id="btn-nirf-resultados" class="button" style="background-color: #2563eb;">Resultados (Classe 8)</button>
+        </div>
+        <div id="report-status" style="margin-bottom:1rem; min-height:1.2rem; font-weight:600; color:#2563eb;"></div>
+        <table id="balancete-table" class="entries-table" style="display: none;">
+          <thead id="balancete-thead"></thead>
+          <tbody id="balancete-tbody"></tbody>
+        </table>
+        <div id="balancete-summary" style="margin-top: 1rem; display: none;"></div>
+      </div>
+    </section>
+
+    <section class="section about" id="plano-de-contas">
+      <div class="contact-details">
+        <h3>Plano de Contas PGC-NIRF — Classes 1 a 8</h3>
+        <p>Plano geral de contas atualizado para NIRF com classes de Meios Financeiros até Resultados.</p>
+        <div style="margin-top: 1rem;">
+          <h4>Classe 1 — Meios Financeiros</h4>
+          <ul>
+            <li><strong>1.1</strong> Caixa</li>
+            <li><strong>1.2</strong> Bancos
+              <ul>
+                <li><strong>1.2.1</strong> Depósitos à ordem</li>
+                <li><strong>1.2.2</strong> Depósitos com pré-aviso</li>
+                <li><strong>1.2.3</strong> Depósitos a prazo</li>
+              </ul>
+            </li>
+            <li><strong>1.3</strong> Outros Instrumentos Financeiros
+              <ul>
+                <li><strong>1.3.1</strong> Derivados</li>
+                <li><strong>1.3.2</strong> Detidos para negociação</li>
+                <li><strong>1.3.3</strong> Outros instrumentos financeiros ao justo valor através dos resultados</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 2 — Inventários e Activos Biológicos</h4>
+          <ul>
+            <li><strong>2.1</strong> Compras
+              <ul>
+                <li><strong>2.1.1</strong> Mercadorias</li>
+                <li><strong>2.1.2</strong> Matérias-primas, auxiliares e materiais
+                  <ul>
+                    <li><strong>2.1.2.1</strong> Matérias-primas</li>
+                    <li><strong>2.1.2.2</strong> Matérias auxiliares</li>
+                    <li><strong>2.1.2.3</strong> Materiais
+                      <ul>
+                        <li><strong>2.1.2.3.1</strong> Combustíveis e lubrificantes</li>
+                        <li><strong>2.1.2.3.2</strong> Embalagens comerciais</li>
+                        <li><strong>2.1.2.3.3</strong> Peças e sobressalentes</li>
+                        <li><strong>2.1.2.3.9</strong> Materiais diversos</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><strong>2.1.7</strong> Devoluções de compras</li>
+                <li><strong>2.1.8</strong> Descontos e abatimentos em compras</li>
+              </ul>
+            </li>
+            <li><strong>2.2</strong> Mercadorias
+              <ul>
+                <li><strong>2.2.1</strong> Mercadorias em trânsito</li>
+                <li><strong>2.2.2</strong> Mercadorias em poder de terceiros</li>
+              </ul>
+            </li>
+            <li><strong>2.3</strong> Produtos Acabados e Intermédios
+              <ul>
+                <li><strong>2.3.1</strong> Produtos acabados</li>
+                <li><strong>2.3.2</strong> Produtos intermédios</li>
+              </ul>
+            </li>
+            <li><strong>2.4</strong> Subprodutos, Desperdícios, Resíduos e Refugos
+              <ul>
+                <li><strong>2.4.1</strong> Subprodutos</li>
+                <li><strong>2.4.2</strong> Desperdícios, resíduos e refugos</li>
+              </ul>
+            </li>
+            <li><strong>2.5</strong> Produtos ou Serviços em Curso</li>
+            <li><strong>2.6</strong> Matérias-primas, Auxiliares e Materiais
+              <ul>
+                <li><strong>2.6.1</strong> Matérias-primas</li>
+                <li><strong>2.6.2</strong> Matérias auxiliares</li>
+                <li><strong>2.6.3</strong> Materiais
+                  <ul>
+                    <li><strong>2.6.3.1</strong> Combustíveis e lubrificantes</li>
+                    <li><strong>2.6.3.2</strong> Embalagens comerciais</li>
+                    <li><strong>2.6.3.3</strong> Peças e sobressalentes</li>
+                    <li><strong>2.6.3.9</strong> Materiais diversos</li>
+                  </ul>
+                </li>
+                <li><strong>2.6.4</strong> Matérias-primas, auxiliares e materiais em trânsito</li>
+              </ul>
+            </li>
+            <li><strong>2.7</strong> Activos Biológicos
+              <ul>
+                <li><strong>2.7.1</strong> De produção
+                  <ul>
+                    <li><strong>2.7.1.1</strong> Animais</li>
+                    <li><strong>2.7.1.2</strong> Plantas</li>
+                  </ul>
+                </li>
+                <li><strong>2.7.2</strong> Consumíveis
+                  <ul>
+                    <li><strong>2.7.2.1</strong> Animais</li>
+                    <li><strong>2.7.2.2</strong> Plantas</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><strong>2.8</strong> Regularização de Inventários
+              <ul>
+                <li><strong>2.8.2</strong> Mercadorias</li>
+                <li><strong>2.8.3</strong> Produtos acabados e intermédios</li>
+                <li><strong>2.8.4</strong> Subprodutos, desperdícios, resíduos e refugos</li>
+                <li><strong>2.8.5</strong> Produtos ou serviços em curso</li>
+                <li><strong>2.8.6</strong> Matérias-primas, auxiliares e materiais</li>
+                <li><strong>2.8.7</strong> Activos biológicos</li>
+              </ul>
+            </li>
+            <li><strong>2.9</strong> Ajustamentos para o Valor Realizável Líquido
+              <ul>
+                <li><strong>2.9.1</strong> Mercadorias</li>
+                <li><strong>2.9.3</strong> Produtos acabados e intermédios</li>
+                <li><strong>2.9.4</strong> Subprodutos, desperdícios, resíduos ou refugos</li>
+                <li><strong>2.9.5</strong> Produtos ou serviços em curso</li>
+                <li><strong>2.9.6</strong> Matérias-primas, auxiliares e materiais</li>
+                <li><strong>2.9.7</strong> Activos biológicos</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 3 — Investimentos de Capital</h4>
+          <ul>
+            <li><strong>3.1</strong> Investimentos Financeiros
+              <ul>
+                <li><strong>3.1.1</strong> Investimentos em subsidiárias</li>
+                <li><strong>3.1.2</strong> Investimentos em associadas</li>
+                <li><strong>3.1.3</strong> Investimentos em entidades conjuntamente controladas</li>
+                <li><strong>3.1.4</strong> Outros investimentos financeiros</li>
+                <li><strong>3.1.5</strong> Investimentos detidos até à maturidade</li>
+                <li><strong>3.1.6</strong> Outros investimentos disponíveis para venda</li>
+              </ul>
+            </li>
+            <li><strong>3.2</strong> Activos Tangíveis
+              <ul>
+                <li><strong>3.2.1</strong> Terrenos
+                  <ul>
+                    <li><strong>3.2.1.1</strong> Edifícios industriais</li>
+                    <li><strong>3.2.1.2</strong> Edifícios administrativos e comerciais</li>
+                    <li><strong>3.2.1.3</strong> Edifícios para habitação e outros fins sociais</li>
+                    <li><strong>3.2.1.6</strong> Vias de comunicação e construções afins</li>
+                  </ul>
+                </li>
+                <li><strong>3.2.2</strong> Equipamento básico</li>
+                <li><strong>3.2.3</strong> Mobiliário e equipamento administrativo social</li>
+                <li><strong>3.2.4</strong> Equipamento de transporte</li>
+                <li><strong>3.2.5</strong> Taras e vasilhame</li>
+                <li><strong>3.2.6</strong> Ferramentas e utensílios</li>
+                <li><strong>3.2.7</strong> Activos de exploração e avaliação de recursos minerais</li>
+                <li><strong>3.2.9</strong> Outros activos tangíveis</li>
+              </ul>
+            </li>
+            <li><strong>3.3</strong> Activos Intangíveis
+              <ul>
+                <li><strong>3.3.1</strong> Despesas de desenvolvimento</li>
+                <li><strong>3.3.2</strong> Propriedade industrial e outros direitos</li>
+                <li><strong>3.3.3</strong> Goodwill</li>
+                <li><strong>3.3.4</strong> Activos de exploração e avaliação de recursos minerais</li>
+              </ul>
+            </li>
+            <li><strong>3.4</strong> Investimentos em Curso
+              <ul>
+                <li><strong>3.4.2</strong> Activos tangíveis</li>
+                <li><strong>3.4.3</strong> Activos intangíveis</li>
+              </ul>
+            </li>
+            <li><strong>3.5</strong> Activos Não Correntes Detidos para Venda</li>
+            <li><strong>3.6</strong> Activos Tangíveis de Investimento</li>
+            <li><strong>3.8</strong> Amortizações Acumuladas
+              <ul>
+                <li><strong>3.8.2</strong> Activos tangíveis</li>
+                <li><strong>3.8.3</strong> Activos intangíveis</li>
+                <li><strong>3.8.6</strong> Activos tangíveis de investimento</li>
+                <li><strong>3.8.7</strong> Activos de exploração e avaliação de recursos minerais</li>
+              </ul>
+            </li>
+            <li><strong>3.9</strong> Imparidade Acumulada de Investimentos de Capital
+              <ul>
+                <li><strong>3.9.1</strong> Investimentos financeiros</li>
+                <li><strong>3.9.2</strong> Activos tangíveis</li>
+                <li><strong>3.9.3</strong> Activos intangíveis</li>
+                <li><strong>3.9.5</strong> Activos não correntes detidos para venda</li>
+                <li><strong>3.9.6</strong> Activos tangíveis de investimento</li>
+                <li><strong>3.9.7</strong> Activos de exploração e avaliação de recursos minerais</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 4 — Contas a Receber, Contas a Pagar, Acréscimos e Diferimentos</h4>
+          <ul>
+            <li><strong>4.1</strong> Clientes
+              <ul>
+                <li><strong>4.1.1</strong> Clientes c/c</li>
+                <li><strong>4.1.2</strong> Clientes — Títulos a receber</li>
+                <li><strong>4.1.8</strong> Clientes de cobrança duvidosa</li>
+                <li><strong>4.1.9</strong> Adiantamentos de clientes</li>
+              </ul>
+            </li>
+            <li><strong>4.2</strong> Fornecedores
+              <ul>
+                <li><strong>4.2.1</strong> Fornecedores c/c</li>
+                <li><strong>4.2.2</strong> Fornecedores — Títulos a pagar</li>
+                <li><strong>4.2.9</strong> Adiantamentos a fornecedores</li>
+              </ul>
+            </li>
+            <li><strong>4.3</strong> Empréstimos Obtidos
+              <ul>
+                <li><strong>4.3.1</strong> Empréstimos bancários
+                  <ul>
+                    <li><strong>4.3.1.1</strong> De curto prazo</li>
+                    <li><strong>4.3.1.2</strong> De médio e longo prazo</li>
+                  </ul>
+                </li>
+                <li><strong>4.3.2</strong> Empréstimos por obrigações
+                  <ul>
+                    <li><strong>4.3.2.1</strong> Convertíveis</li>
+                    <li><strong>4.3.2.2</strong> Não convertíveis</li>
+                  </ul>
+                </li>
+                <li><strong>4.3.3</strong> Empréstimos por títulos de participação</li>
+                <li><strong>4.3.9</strong> Outros empréstimos obtidos</li>
+              </ul>
+            </li>
+            <li><strong>4.4</strong> Estado
+              <ul>
+                <li><strong>4.4.1</strong> Imposto sobre o rendimento
+                  <ul>
+                    <li><strong>4.4.1.1</strong> Estimativa de imposto</li>
+                    <li><strong>4.4.1.2</strong> Pagamentos por conta</li>
+                    <li><strong>4.4.1.3</strong> Pagamento especial por conta</li>
+                  </ul>
+                </li>
+                <li><strong>4.4.2</strong> Impostos retidos na fonte</li>
+                <li><strong>4.4.3</strong> Imposto sobre o valor acrescentado (IVA)
+                  <ul>
+                    <li><strong>4.4.3.1</strong> IVA suportado</li>
+                    <li><strong>4.4.3.2</strong> IVA dedutível</li>
+                    <li><strong>4.4.3.3</strong> IVA liquidado</li>
+                    <li><strong>4.4.3.4</strong> IVA regularizações</li>
+                    <li><strong>4.4.3.5</strong> IVA apuramento</li>
+                  </ul>
+                </li>
+                <li><strong>4.4.4</strong> Retenções na fonte</li>
+                <li><strong>4.4.5</strong> Imposto de selo</li>
+                <li><strong>4.4.6</strong> Impostos diferidos</li>
+                <li><strong>4.4.9</strong> Contribuições para o INSS</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 5 — Capital Próprio</h4>
+          <ul>
+            <li><strong>5.1</strong> Capital</li>
+            <li><strong>5.2</strong> Acções ou Quotas Próprias
+              <ul>
+                <li><strong>5.2.1</strong> Valor nominal</li>
+                <li><strong>5.2.2</strong> Descontos e prémios</li>
+              </ul>
+            </li>
+            <li><strong>5.3</strong> Prestações Suplementares</li>
+            <li><strong>5.4</strong> Prémios de Emissão de Acções ou Quotas</li>
+            <li><strong>5.5</strong> Reservas
+              <ul>
+                <li><strong>5.5.1</strong> Reservas legais</li>
+                <li><strong>5.5.2</strong> Reservas estatutárias</li>
+                <li><strong>5.5.3</strong> Reservas livres</li>
+              </ul>
+            </li>
+            <li><strong>5.6</strong> Excedentes de Revalorização de Activos Tangíveis e Intangíveis
+              <ul>
+                <li><strong>5.6.1</strong> Revalorizações legais</li>
+                <li><strong>5.6.2</strong> Outros excessos</li>
+              </ul>
+            </li>
+            <li><strong>5.8</strong> Outras Variações no Capital Próprio
+              <ul>
+                <li>Variações no justo valor de instrumentos financeiros disponíveis para venda</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 6 — Gastos e Perdas</h4>
+          <ul>
+            <li><strong>6.1</strong> Custo dos Inventários
+              <ul>
+                <li><strong>6.1.1</strong> Custos dos inventários vendidos ou consumidos
+                  <ul>
+                    <li><strong>6.1.1.1</strong> De mercadorias</li>
+                    <li><strong>6.1.1.2</strong> De matérias-primas, auxiliares e materiais
+                      <ul>
+                        <li><strong>6.1.1.2.1</strong> Matérias-primas</li>
+                        <li><strong>6.1.1.2.2</strong> Matérias auxiliares</li>
+                        <li><strong>6.1.1.2.3</strong> Materiais</li>
+                      </ul>
+                    </li>
+                    <li><strong>6.1.3</strong> Activos biológicos</li>
+                  </ul>
+                </li>
+                <li><strong>6.1.2</strong> Variação da produção
+                  <ul>
+                    <li><strong>6.1.2.1</strong> Produtos acabados e intermédios</li>
+                    <li><strong>6.1.2.2</strong> Subprodutos, desperdícios, resíduos e refugos</li>
+                    <li><strong>6.1.2.3</strong> Produtos e serviços em curso</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><strong>6.2</strong> Gastos com Pessoal
+              <ul>
+                <li><strong>6.2.1</strong> Remunerações dos órgãos sociais</li>
+                <li><strong>6.2.2</strong> Remunerações dos trabalhadores</li>
+                <li><strong>6.2.3</strong> Encargos sobre remunerações</li>
+                <li><strong>6.2.4</strong> Benefícios pós-emprego</li>
+                <li><strong>6.2.5</strong> Ajudas de custo
+                  <ul>
+                    <li><strong>6.2.5.1</strong> Ajudas de custo tributáveis</li>
+                    <li><strong>6.2.5.2</strong> Ajudas de custo não tributáveis</li>
+                  </ul>
+                </li>
+                <li><strong>6.2.6</strong> Indemnizações
+                  <ul>
+                    <li><strong>6.2.6.1</strong> Indemnizações — Risco segurável</li>
+                    <li><strong>6.2.6.2</strong> Indemnizações — Outras</li>
+                  </ul>
+                </li>
+                <li><strong>6.2.7</strong> Seguros de acidentes no trabalho e doenças profissionais</li>
+                <li><strong>6.2.8</strong> Gastos de acção social</li>
+                <li><strong>6.2.9</strong> Outros gastos com pessoal</li>
+              </ul>
+            </li>
+            <li><strong>6.3</strong> Fornecimentos e Serviços de Terceiros
+              <ul>
+                <li><strong>6.3.1</strong> Subcontratos</li>
+                <li><strong>6.3.2</strong> Fornecimentos e serviços
+                  <ul>
+                    <li><strong>6.3.2.1</strong> Água</li>
+                    <li><strong>6.3.2.2</strong> Electricidade</li>
+                    <li><strong>6.3.2.3</strong> Combustíveis
+                      <ul>
+                        <li><strong>6.3.2.3.1</strong> Gasóleo
+                          <ul>
+                            <li><strong>6.3.2.3.1.1</strong> Gasóleo — viaturas ligeiras de passageiros</li>
+                            <li><strong>6.3.2.3.1.2</strong> Gasóleo — restantes consumos</li>
+                          </ul>
+                        </li>
+                        <li><strong>6.3.2.3.2</strong> Combustíveis — Outros</li>
+                        <li><strong>6.3.2.3.3</strong> Lubrificantes
+                          <ul>
+                            <li><strong>6.3.2.3.3.1</strong> Lubrificantes — viaturas ligeiras de passageiros</li>
+                            <li><strong>6.3.2.3.3.2</strong> Lubrificantes — Outros</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><strong>6.3.2.4</strong> Ferramentas e utensílios de desgaste rápido</li>
+                    <li><strong>6.3.2.5</strong> Material de manutenção e reparação
+                      <ul>
+                        <li><strong>6.3.2.5.1</strong> Material de manutenção e reparação — viaturas ligeiras de passageiros</li>
+                        <li><strong>6.3.2.5.2</strong> Material de manutenção e reparação — Outros</li>
+                      </ul>
+                    </li>
+                    <li><strong>6.3.2.6</strong> Material de escritório</li>
+                    <li><strong>6.3.2.7</strong> Livros e documentação técnica</li>
+                    <li><strong>6.3.2.8</strong> Artigos para oferta</li>
+                    <li><strong>6.3.2.9</strong> Comunicação
+                      <ul>
+                        <li><strong>6.3.2.9.1</strong> Manutenção e reparação</li>
+                        <li><strong>6.3.2.9.2</strong> Transportes de carga</li>
+                        <li><strong>6.3.2.9.3</strong> Transportes de pessoal</li>
+                        <li><strong>6.3.2.9.4</strong> Comunicações</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>Outros fornecimentos e serviços
+                  <ul>
+                    <li><strong>6.3.2.2.5</strong> Honorários</li>
+                    <li><strong>6.3.2.6</strong> Comissões e intermediações</li>
+                    <li><strong>6.3.2.7</strong> Publicidade e propaganda
+                      <ul>
+                        <li><strong>6.3.2.7.1</strong> Publicidade e propaganda — Campanhas publicitárias</li>
+                        <li><strong>6.3.2.7.2</strong> Publicidade e propaganda — Outros</li>
+                      </ul>
+                    </li>
+                    <li><strong>6.3.2.8</strong> Deslocações e estadas
+                      <ul>
+                        <li><strong>6.3.2.8.1</strong> Deslocações e estadas — serviço</li>
+                        <li><strong>6.3.2.8.2</strong> Deslocações e estadas — outras</li>
+                      </ul>
+                    </li>
+                    <li><strong>6.3.2.9</strong> Despesas de representação</li>
+                    <li><strong>6.3.2.3.1</strong> Contencioso e notariado</li>
+                    <li><strong>6.3.2.3.2</strong> Rendas e alugueres</li>
+                    <li><strong>6.3.2.3.3</strong> Seguros</li>
+                    <li><strong>6.3.2.3.4</strong> Royalties</li>
+                    <li><strong>6.3.2.3.5</strong> Limpeza, higiene e conforto</li>
+                    <li><strong>6.3.2.3.6</strong> Vigilância e segurança</li>
+                    <li><strong>6.3.2.3.7</strong> Trabalhos especializados</li>
+                    <li><strong>6.3.2.9.9</strong> Outros fornecimentos e serviços</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><strong>6.4</strong> Perdas por Imparidade do Período
+              <ul>
+                <li><strong>6.4.1</strong> Ajustamentos de inventários para o valor realizável líquido</li>
+                <li><strong>6.4.2</strong> Investimentos financeiros</li>
+                <li><strong>6.4.3</strong> Activos tangíveis</li>
+                <li><strong>6.4.4</strong> Activos intangíveis</li>
+                <li><strong>6.4.5</strong> Activos não correntes detidos para venda</li>
+                <li><strong>6.4.6</strong> Activos tangíveis de investimento</li>
+                <li><strong>6.4.7</strong> Activos de exploração e avaliação de recursos minerais</li>
+                <li><strong>6.4.8</strong> Contas a receber
+                  <ul>
+                    <li><strong>6.4.8.1</strong> Contas a receber — ajustamentos dentro dos limites fiscais</li>
+                    <li><strong>6.4.8.2</strong> Contas a receber — ajustamentos para além dos limites fiscais</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><strong>6.5</strong> Amortizações do Período
+              <ul>
+                <li><strong>6.5.1</strong> Activos tangíveis</li>
+                <li><strong>6.5.2</strong> Activos intangíveis</li>
+                <li><strong>6.5.3</strong> Activos tangíveis de investimento</li>
+                <li><strong>6.5.4</strong> Activos de exploração e avaliação de recursos minerais</li>
+              </ul>
+            </li>
+            <li><strong>6.6</strong> Provisões do Período
+              <ul>
+                <li><strong>6.6.1</strong> Processos judiciais em curso</li>
+                <li><strong>6.6.2</strong> Acidentes no trabalho e doenças profissionais</li>
+                <li><strong>6.6.3</strong> Impostos</li>
+                <li><strong>6.6.4</strong> Reestruturação de negócios</li>
+                <li><strong>6.6.5</strong> Contratos onerosos</li>
+                <li><strong>6.6.6</strong> Garantias a clientes</li>
+                <li><strong>6.6.7</strong> Perdas em contratos de construção</li>
+                <li><strong>6.6.9</strong> Outras provisões</li>
+              </ul>
+            </li>
+            <li><strong>6.7</strong> Perdas por Redução do Justo Valor
+              <ul>
+                <li><strong>6.7.1</strong> Instrumentos financeiros</li>
+                <li><strong>6.7.2</strong> Activos tangíveis de investimento</li>
+                <li><strong>6.7.3</strong> Activos biológicos</li>
+              </ul>
+            </li>
+            <li><strong>6.8</strong> Outros Gastos e Perdas Operacionais
+              <ul>
+                <li><strong>6.8.1</strong> Despesas de investigação e pesquisa</li>
+                <li><strong>6.8.2</strong> Impostos e taxas
+                  <ul>
+                    <li><strong>6.8.2.1</strong> Direitos aduaneiros</li>
+                    <li><strong>6.8.2.2</strong> Imposto sobre Valor Acrescentado</li>
+                    <li><strong>6.8.2.3</strong> Imposto de selo</li>
+                    <li><strong>6.8.2.4</strong> Impostos sobre veículos</li>
+                    <li><strong>6.8.2.5</strong> Impostos autárquicos</li>
+                  </ul>
+                </li>
+                <li><strong>6.8.3</strong> Perdas em investimentos de capital
+                  <ul>
+                    <li><strong>6.8.3.1</strong> Alienação</li>
+                    <li><strong>6.8.3.2</strong> Abates</li>
+                    <li><strong>6.8.3.3</strong> Sinistros</li>
+                  </ul>
+                </li>
+                <li><strong>6.8.4</strong> Perdas em inventários e activos biológicos
+                  <ul>
+                    <li><strong>6.8.4.1</strong> Sinistros</li>
+                    <li><strong>6.8.4.2</strong> Quebras</li>
+                    <li><strong>6.8.4.9</strong> Outras</li>
+                  </ul>
+                </li>
+                <li><strong>6.8.9</strong> Outros gastos operacionais
+                  <ul>
+                    <li><strong>6.8.9.1</strong> Quotizações</li>
+                    <li><strong>6.8.9.2</strong> Despesas confidenciais</li>
+                    <li><strong>6.8.9.3</strong> Ofertas e amostras de inventários</li>
+                    <li><strong>6.8.9.4</strong> Programas de responsabilidade social</li>
+                    <li><strong>6.8.9.5</strong> Donativos
+                      <ul>
+                        <li><strong>6.8.9.5.1</strong> Donativos ao Estado</li>
+                        <li><strong>6.8.9.5.2</strong> Outros donativos no âmbito do Mecenato</li>
+                      </ul>
+                    </li>
+                    <li><strong>6.8.9.6</strong> Multas e penalidades</li>
+                    <li><strong>6.8.9.9</strong> Outros</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><strong>6.9</strong> Gastos e Perdas Financeiros
+              <ul>
+                <li><strong>6.9.1</strong> Juros suportados
+                  <ul>
+                    <li><strong>6.9.1.1</strong> Empréstimos bancários</li>
+                    <li><strong>6.9.1.2</strong> Empréstimos obrigacionistas ou títulos de participação</li>
+                    <li><strong>6.9.1.3</strong> Empréstimos de sócios, accionistas ou proprietários</li>
+                    <li><strong>6.9.1.4</strong> Outros empréstimos</li>
+                    <li><strong>6.9.1.5</strong> Desconto de títulos</li>
+                    <li><strong>6.9.1.6</strong> Juros de mora e compensatórios</li>
+                  </ul>
+                </li>
+                <li><strong>6.9.4</strong> Diferenças de câmbio desfavoráveis
+                  <ul>
+                    <li><strong>6.9.4.1</strong> Realizadas</li>
+                    <li><strong>6.9.4.2</strong> Não realizadas</li>
+                  </ul>
+                </li>
+                <li><strong>6.9.5</strong> Descontos de pronto pagamento concedidos</li>
+                <li><strong>6.9.8</strong> Diversos bancários</li>
+                <li><strong>6.9.9</strong> Outros não especificados</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 7 — Rendimentos e Ganhos</h4>
+          <ul>
+            <li><strong>7.1</strong> Vendas
+              <ul>
+                <li><strong>7.1.1</strong> Mercadorias</li>
+                <li><strong>7.1.2</strong> Produtos acabados e intermédios</li>
+                <li><strong>7.1.3</strong> Subprodutos, resíduos e refugos</li>
+                <li><strong>7.1.4</strong> Activos biológicos</li>
+                <li><strong>7.1.5</strong> IVA das vendas com imposto incluído</li>
+                <li><strong>7.1.6</strong> Devolução de vendas</li>
+                <li><strong>7.1.7</strong> Descontos e abatimentos</li>
+              </ul>
+            </li>
+            <li><strong>7.2</strong> Prestação de Serviços
+              <ul>
+                <li><strong>7.2.1</strong> IVA da prestação de serviços com imposto incluído</li>
+                <li><strong>7.2.6</strong> Descontos e abatimentos</li>
+              </ul>
+            </li>
+            <li><strong>7.3</strong> Investimentos Realizados pela Própria Empresa
+              <ul>
+                <li><strong>7.3.1</strong> Investimentos financeiros</li>
+                <li><strong>7.3.2</strong> Activos tangíveis</li>
+                <li><strong>7.3.3</strong> Activos intangíveis</li>
+                <li><strong>7.3.4</strong> Investimentos em curso</li>
+              </ul>
+            </li>
+            <li><strong>7.4</strong> Reversões do Período
+              <ul>
+                <li><strong>7.4.1</strong> De perdas por imparidade
+                  <ul>
+                    <li><strong>7.4.1.1</strong> Ajustamentos de inventários para o valor realizável líquido</li>
+                    <li><strong>7.4.1.2</strong> Investimentos financeiros</li>
+                    <li><strong>7.4.1.3</strong> Activos tangíveis</li>
+                    <li><strong>7.4.1.4</strong> Activos intangíveis</li>
+                    <li><strong>7.4.1.5</strong> Activos não correntes detidos para venda</li>
+                    <li><strong>7.4.1.6</strong> Activos tangíveis de investimento</li>
+                    <li><strong>7.4.1.7</strong> Activos de exploração e avaliação de recursos minerais</li>
+                    <li><strong>7.4.1.8</strong> Contas a receber</li>
+                  </ul>
+                </li>
+                <li><strong>7.4.2</strong> De amortizações
+                  <ul>
+                    <li><strong>7.4.2.1</strong> Activos tangíveis</li>
+                    <li><strong>7.4.2.2</strong> Activos intangíveis</li>
+                    <li><strong>7.4.2.3</strong> Activos tangíveis de investimento</li>
+                    <li><strong>7.4.2.4</strong> Activos de exploração e avaliação de recursos minerais</li>
+                  </ul>
+                </li>
+                <li><strong>7.4.3</strong> De provisões
+                  <ul>
+                    <li><strong>7.4.3.1</strong> Processos judiciais em curso</li>
+                    <li><strong>7.4.3.2</strong> Acidentes no trabalho e doenças profissionais</li>
+                    <li><strong>7.4.3.3</strong> Impostos</li>
+                    <li><strong>7.4.3.4</strong> Reestruturação de negócios</li>
+                    <li><strong>7.4.3.5</strong> Contratos onerosos</li>
+                    <li><strong>7.4.3.6</strong> Garantias a clientes</li>
+                    <li><strong>7.4.3.7</strong> Perdas em contratos de construção</li>
+                    <li><strong>7.4.3.9</strong> Outras provisões</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><strong>7.5</strong> Rendimentos Suplementares
+              <ul>
+                <li><strong>7.5.1</strong> Serviços sociais</li>
+                <li><strong>7.5.2</strong> Aluguer de equipamento</li>
+                <li><strong>7.5.3</strong> Venda de energia</li>
+                <li><strong>7.5.4</strong> Estudos, projectos, pesquisas e investigações</li>
+                <li><strong>7.5.5</strong> Assistência técnica</li>
+                <li><strong>7.5.6</strong> Royalties</li>
+                <li><strong>7.5.7</strong> Cargos sociais exercidos noutras empresas</li>
+                <li><strong>7.5.9</strong> Outros rendimentos suplementares</li>
+              </ul>
+            </li>
+            <li><strong>7.6</strong> Outros Rendimentos e Ganhos Operacionais
+              <ul>
+                <li><strong>7.6.1</strong> Subsídios para investimentos</li>
+                <li><strong>7.6.2</strong> Subsídios à exploração</li>
+                <li><strong>7.6.3</strong> Ganhos em investimentos de capital</li>
+                <li><strong>7.6.4</strong> Ganhos em inventários e activos biológicos</li>
+                <li><strong>7.6.9</strong> Outros rendimentos alheios ao valor acrescentado</li>
+              </ul>
+            </li>
+            <li><strong>7.8</strong> Rendimentos e Ganhos Financeiros
+              <ul>
+                <li><strong>7.8.1</strong> Juros obtidos</li>
+                <li><strong>7.8.2</strong> Rendimentos de activos tangíveis de investimentos</li>
+                <li><strong>7.8.3</strong> Rendimentos de instrumentos financeiros</li>
+                <li><strong>7.8.4</strong> Diferenças de câmbio favoráveis</li>
+                <li><strong>7.8.5</strong> Descontos de pronto pagamento obtidos</li>
+                <li><strong>7.8.9</strong> Outros rendimentos e ganhos financeiros</li>
+              </ul>
+            </li>
+            <li><strong>7.9</strong> Ganhos por Aumento do Justo Valor
+              <ul>
+                <li><strong>7.9.1</strong> Instrumentos financeiros</li>
+                <li><strong>7.9.2</strong> Activos tangíveis de investimento</li>
+                <li><strong>7.9.3</strong> Activos biológicos</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Classe 8 — Resultados</h4>
+          <ul>
+            <li><strong>8.1</strong> Resultados Operacionais</li>
+            <li><strong>8.2</strong> Resultados Financeiros</li>
+            <li><strong>8.3</strong> Resultados Correntes</li>
+            <li><strong>8.5</strong> Imposto sobre o Rendimento
+              <ul>
+                <li><strong>8.5.1</strong> Imposto corrente</li>
+                <li><strong>8.5.2</strong> Imposto diferido</li>
+              </ul>
+            </li>
+            <li><strong>8.8</strong> Resultado Líquido do Período</li>
+            <li><strong>8.9</strong> Dividendos Antecipados</li>
+          </ul>
+        </div>
+        <datalist id="account-list">
+          <option value="1.1 Caixa"></option>
+          <option value="1.2 Bancos"></option>
+          <option value="1.2.1 Depósitos à ordem"></option>
+          <option value="1.2.2 Depósitos com pré-aviso"></option>
+          <option value="1.2.3 Depósitos a prazo"></option>
+          <option value="1.2.4 Derivados"></option>
+          <option value="1.2.5 Detidos para negociação"></option>
+          <option value="1.2.6 Outros instrumentos financeiros"></option>
+          <option value="2.1 Mercadorias"></option>
+          <option value="2.2 Matérias-primas"></option>
+          <option value="2.3 Materiais"></option>
+          <option value="2.4 Combustíveis e lubrificantes"></option>
+          <option value="2.5 Produtos acabados"></option>
+          <option value="2.6 Activos biológicos"></option>
+          <option value="3.1 Clientes c/c"></option>
+          <option value="4.1 Fornecedores c/c"></option>
+          <option value="5.1 Capital próprio"></option>
+          <option value="5.2 Reservas legais"></option>
+          <option value="6.1 Juros suportados"></option>
+          <option value="7.1.1 Vendas de mercadorias"></option>
+          <option value="7.2.1 Prestação de serviços"></option>
+          <option value="8.1 Resultados Operacionais"></option>
+          <option value="8.2 Resultados Financeiros"></option>
+          <option value="8.3 Resultados Correntes"></option>
+          <option value="8.5 Imposto sobre o Rendimento"></option>
+          <option value="8.5.1 Imposto corrente"></option>
+          <option value="8.5.2 Imposto diferido"></option>
+          <option value="8.8 Resultado Líquido do Período"></option>
+          <option value="8.9 Dividendos Antecipados"></option>
+        </datalist>
+      </div>
+    </section>
+  <footer class="site-footer">
+    <p>© 2026 MOZ.sistems. Todos os direitos reservados.</p>
+  </footer>
+  <script>
+    const entryDateInput = document.getElementById('entry-date');
+    const entryNumberPreview = document.getElementById('entry-number-preview');
+    const entryDebitAccountInput = document.getElementById('entry-debit-account');
+    const entryCreditAccountInput = document.getElementById('entry-credit-account');
+    const entryCostCenterInput = document.getElementById('entry-cost-center');
+    const entryDescriptionInput = document.getElementById('entry-description');
+    const entryDebitAmountInput = document.getElementById('entry-debit-amount');
+    const entryCreditAmountInput = document.getElementById('entry-credit-amount');
+    const addEntryButton = document.getElementById('add-entry-button');
+    const clearEntryButton = document.getElementById('clear-entry-button');
+    const clearAllButton = document.getElementById('clear-all-button');
+    const clearFiltersButton = document.getElementById('clear-filters-button');
+    const filterStartDateInput = document.getElementById('filter-start-date');
+    const filterEndDateInput = document.getElementById('filter-end-date');
+    const filterAccountInput = document.getElementById('filter-account');
+    const filterCostCenterInput = document.getElementById('filter-cost-center');
+    const balanceteContaPeriodoButton = document.getElementById('btn-balancete-conta-periodo');
+    const razaoButton = document.getElementById('btn-razao');
+    const balancoButton = document.getElementById('btn-balanco');
+    const nirfGeralButton = document.getElementById('btn-nirf-geral');
+    const nirfGastosButton = document.getElementById('btn-nirf-gastos');
+    const nirfReceitasButton = document.getElementById('btn-nirf-receitas');
+    const nirfResultadosButton = document.getElementById('btn-nirf-resultados');
+    const exportCsvButton = document.getElementById('btn-export-csv');
+    const printReportButton = document.getElementById('btn-print-report');
+    const formStatus = document.getElementById('form-status');
+    const reportStatus = document.getElementById('report-status');
+    const editModeIndicator = document.getElementById('edit-mode-indicator');
+    const entriesTableBody = document.getElementById('entries-table-body');
+    const summary = document.getElementById('entries-summary');
+    const accountListDatalist = document.getElementById('account-list');
+    const accountPlanItems = [
+      { code: '1.1', label: 'Caixa' },
+      { code: '1.2', label: 'Bancos' },
+      { code: '1.2.1', label: 'Depósitos à ordem' },
+      { code: '1.2.2', label: 'Depósitos com pré-aviso' },
+      { code: '1.2.3', label: 'Depósitos a prazo' },
+      { code: '1.2.4', label: 'Derivados' },
+      { code: '1.2.5', label: 'Detidos para negociação' },
+      { code: '1.2.6', label: 'Outros instrumentos financeiros' },
+      { code: '2.1', label: 'Mercadorias' },
+      { code: '2.2', label: 'Matérias-primas' },
+      { code: '2.3', label: 'Materiais' },
+      { code: '2.4', label: 'Combustíveis e lubrificantes' },
+      { code: '2.5', label: 'Produtos acabados' },
+      { code: '2.6', label: 'Activos biológicos' },
+      { code: '3.1', label: 'Clientes c/c' },
+      { code: '4.1', label: 'Fornecedores c/c' },
+      { code: '5.1', label: 'Capital próprio' },
+      { code: '5.2', label: 'Reservas legais' },
+      { code: '6.1', label: 'Juros suportados' },
+      { code: '7.1.1', label: 'Vendas de mercadorias' },
+      { code: '7.2.1', label: 'Prestação de serviços' },
+      { code: '8.1', label: 'Resultados Operacionais' },
+      { code: '8.2', label: 'Resultados Financeiros' },
+      { code: '8.3', label: 'Resultados Correntes' },
+      { code: '8.5', label: 'Imposto sobre o Rendimento' },
+      { code: '8.5.1', label: 'Imposto corrente' },
+      { code: '8.5.2', label: 'Imposto diferido' },
+      { code: '8.8', label: 'Resultado Líquido do Período' },
+      { code: '8.9', label: 'Dividendos Antecipados' }
+    ];
+
+    function normalizeAccountInput(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function normalizeAccountCode(value) {
+      return String(value || '').replace(/\D/g, '');
+    }
+
+    function getAccountItemByInput(input) {
+      const normalized = normalizeAccountInput(input);
+      if (!normalized) return null;
+
+      const numericInput = normalizeAccountCode(normalized);
+      if (numericInput) {
+        const exactByCode = accountPlanItems.find(item => normalizeAccountCode(item.code) === numericInput);
+        if (exactByCode) return exactByCode;
+      }
+
+      return accountPlanItems.find(item => {
+        const fullValue = `${item.code} ${item.label}`.toLowerCase();
+        return fullValue === normalized || item.label.toLowerCase() === normalized;
+      }) || null;
+    }
+
+    function getAccountDisplay(accountInput) {
+      const item = getAccountItemByInput(accountInput);
+      return item ? `${item.code} ${item.label}` : String(accountInput || '').trim();
+    }
+
+    function isValidPlanAccount(account) {
+      return !!getAccountItemByInput(account);
+    }
+
+    function filterAccountPlanItems(filter) {
+      const normalized = normalizeAccountInput(filter);
+      const numericFilter = normalizeAccountCode(normalized);
+      if (!normalized) return accountPlanItems;
+      return accountPlanItems.filter(item => {
+        const fullValue = `${item.code} ${item.label}`.toLowerCase();
+        return fullValue.includes(normalized)
+          || item.label.toLowerCase().includes(normalized)
+          || (numericFilter && normalizeAccountCode(item.code).startsWith(numericFilter));
+      });
+    }
+
+    function updateAccountDatalist(filter) {
+      const matches = filterAccountPlanItems(filter);
+      accountListDatalist.innerHTML = '';
+      matches.forEach(item => {
+        const option = document.createElement('option');
+        option.value = `${item.code} ${item.label}`;
+        accountListDatalist.appendChild(option);
+      });
+    }
+
+    function attachAccountInputBehavior(input) {
+      input.addEventListener('input', () => updateAccountDatalist(input.value));
+      input.addEventListener('blur', () => {
+        if (input.value.trim()) {
+          input.value = getAccountDisplay(input.value);
+        }
+      });
+    }
+
+    attachAccountInputBehavior(entryDebitAccountInput);
+    attachAccountInputBehavior(entryCreditAccountInput);
+    let editingIndex = null;
+
+    function formatEntryNumber(num) {
+      return String(num).padStart(3, '0');
+    }
+
+    function formatCurrency(value) {
+      return Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function showFormMessage(message, type = 'error') {
+      if (!formStatus) return;
+      formStatus.textContent = message;
+      formStatus.style.color = type === 'success' ? '#059669' : '#dc2626';
+    }
+
+    function showReportMessage(message, type = 'success') {
+      if (!reportStatus) return;
+      reportStatus.textContent = message;
+      reportStatus.style.color = type === 'success' ? '#059669' : '#dc2626';
+    }
+
+    function clearMessages() {
+      if (formStatus) formStatus.textContent = '';
+      if (reportStatus) reportStatus.textContent = '';
+    }
+
+    function updateSummary(entries) {
+      const totalDebito = entries
+        .reduce((sum, entry) => sum + Number(entry.debitAmount), 0);
+      const totalCredito = entries
+        .reduce((sum, entry) => sum + Number(entry.creditAmount), 0);
+      const saldo = totalDebito - totalCredito;
+
+      summary.textContent = `Total Débito: ${formatCurrency(totalDebito)} MZN · Total Crédito: ${formatCurrency(totalCredito)} MZN · Saldo: ${formatCurrency(saldo)} MZN`;
+    }
+
+    function renderEntries(entries) {
+      entriesTableBody.innerHTML = entries.map((entry, index) => `
+        <tr>
+          <td>${entry.number}</td>
+          <td>${entry.date}</td>
+          <td>${entry.debitAccount}</td>
+          <td>${entry.creditAccount}</td>
+          <td>${entry.costCenter || '-'}</td>
+          <td>${entry.description}</td>
+          <td>${formatCurrency(entry.debitAmount)}</td>
+          <td>${formatCurrency(entry.creditAmount)}</td>
+          <td style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+            <button class="edit-btn" data-index="${index}" type="button" style="background-color: #2563eb; color: white; padding: 0.5rem 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">Editar</button>
+            <button class="delete-btn" data-index="${index}" type="button" style="background-color: #ef4444; color: white; padding: 0.5rem 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">Deletar</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Adicionar event listeners aos botões de edição
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.getAttribute('data-index'));
+          startEditEntry(index);
+        });
+      });
+
+      // Adicionar event listeners aos botões de deletar
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.getAttribute('data-index'));
+          deleteEntry(index);
+        });
+      });
+
+      updateSummary(entries);
+      updateNextEntryNumber(entries);
+    }
+
+    function setEditModeIndicator(text) {
+      if (!editModeIndicator) return;
+      editModeIndicator.textContent = text;
+    }
+
+    function deleteEntry(index) {
+      if (confirm('Tem certeza que deseja deletar este lançamento?')) {
+        entries.splice(index, 1);
+        if (editingIndex !== null) {
+          if (editingIndex === index) {
+            clearInputs();
+          } else if (editingIndex > index) {
+            editingIndex -= 1;
+          }
+        }
+        saveEntries(entries);
+        renderEntries(entries);
+      }
+    }
+
+    function startEditEntry(index) {
+      const entry = entries[index];
+      editingIndex = index;
+      entryDateInput.value = entry.date;
+      entryDebitAccountInput.value = entry.debitAccount;
+      entryCreditAccountInput.value = entry.creditAccount;
+      entryCostCenterInput.value = entry.costCenter === '-' ? '' : entry.costCenter;
+      entryDescriptionInput.value = entry.description;
+      entryDebitAmountInput.value = entry.debitAmount || '';
+      entryCreditAmountInput.value = entry.creditAmount || '';
+      addEntryButton.textContent = 'Salvar';
+      setEditModeIndicator('Editando lançamento nº ' + entry.number);
+      showFormMessage('Modo de edição ativo. Faça as alterações e clique em Salvar.', 'success');
+      entryDateInput.focus();
+    }
+
+    function clearAllEntries() {
+      if (confirm('Deseja apagar todos os lançamentos? Esta ação não pode ser desfeita.')) {
+        entries.splice(0, entries.length);
+        localStorage.removeItem('mozSistemsDailyEntries');
+        renderEntries(entries);
+        clearInputs();
+        showReportMessage('Todos os lançamentos foram removidos.', 'success');
+      }
+    }
+
+    function downloadCSV(entriesToExport) {
+      const headers = ['Número', 'Data', 'Conta a Debitar', 'Conta a Creditar', 'Centro/Código', 'Descrição', 'Débito', 'Crédito'];
+      const rows = entriesToExport.map(entry => [
+        entry.number,
+        entry.date,
+        entry.debitAccount,
+        entry.creditAccount,
+        entry.costCenter || '-',
+        entry.description,
+        entry.debitAmount,
+        entry.creditAmount
+      ]);
+      const csvContent = [headers, ...rows].map(row => row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', 'balancete_entries.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportCsv() {
+      const filteredEntries = getFilteredEntries();
+      if (!filteredEntries.length) {
+        showReportMessage('Não há lançamentos para exportar. Ajuste os filtros ou cadastre entradas.', 'error');
+        return;
+      }
+      downloadCSV(filteredEntries);
+      showReportMessage('Exportação CSV concluída.', 'success');
+    }
+
+    function clearFilters() {
+      filterStartDateInput.value = '';
+      filterEndDateInput.value = '';
+      filterAccountInput.value = '';
+      filterCostCenterInput.value = '';
+      showReportMessage('Filtros limpos.', 'success');
+    }
+
+    function printReport() {
+      window.print();
+    }
+
+    function updateNextEntryNumber(entries) {
+      const nextNumber = entries.length + 1;
+      entryNumberPreview.textContent = formatEntryNumber(nextNumber);
+    }
+
+    function parseAccountCode(account) {
+      const match = String(account).trim().match(/\b(\d{1,4})\b/);
+      return match ? Number(match[1]) : null;
+    }
+
+    function getNirfType(account) {
+      const code = parseAccountCode(account);
+      const lower = String(account).toLowerCase();
+      if (code !== null) {
+        const codeStr = String(code);
+        const leadingTwo = codeStr.length >= 2 ? Number(codeStr.slice(0, 2)) : code;
+        const leadingOne = Number(codeStr[0]);
+
+        if (leadingTwo >= 11 && leadingTwo <= 41) return 'activo';
+        if (leadingTwo >= 42 && leadingTwo <= 49) return 'passivo';
+        if (leadingOne === 5) return 'capital';
+        if (leadingOne === 6) return 'custo';
+        if (leadingOne === 7) return 'receita';
+        if (leadingOne === 8) return 'resultado';
+      }
+      if (lower.includes('ativo') || lower.includes('activo')) return 'activo';
+      if (lower.includes('passivo')) return 'passivo';
+      if (lower.includes('capital')) return 'capital';
+      if (lower.includes('custo') || lower.includes('despesa') || lower.includes('perda') || lower.includes('gasto')) return 'custo';
+      if (lower.includes('receita') || lower.includes('receitas') || lower.includes('proveito') || lower.includes('ganho') || lower.includes('rendimento')) return 'receita';
+      if (lower.includes('resultado')) return 'resultado';
+      return 'desconhecido';
+    }
+
+    function getNirfCategoryLabel(category) {
+      const labels = {
+        activo: 'Classe 1-4 — Activo',
+        passivo: 'Classe 4-5 — Passivo',
+        capital: 'Classe 5 — Capital',
+        custo: 'Classe 6 — Gastos / Perdas',
+        receita: 'Classe 7 — Rendimentos / Ganhos',
+        resultado: 'Classe 8 — Resultados',
+        desconhecido: 'Desconhecido'
+      };
+      return labels[category] || category;
+    }
+
+    function buildEntryNirf(debitAccount, creditAccount) {
+      return {
+        debit: getNirfType(debitAccount),
+        debitCode: parseAccountCode(debitAccount),
+        credit: getNirfType(creditAccount),
+        creditCode: parseAccountCode(creditAccount)
+      };
+    }
+
+    function ensureEntryNirf(entry) {
+      if (!entry.nirf || !entry.nirf.debit || !entry.nirf.credit) {
+        return { ...entry, nirf: buildEntryNirf(entry.debitAccount, entry.creditAccount) };
+      }
+      return entry;
+    }
+
+    function loadEntries() {
+      const saved = localStorage.getItem('mozSistemsDailyEntries');
+      const entries = saved ? JSON.parse(saved) : [];
+      return entries.map(ensureEntryNirf);
+    }
+
+    function saveEntries(entries) {
+      localStorage.setItem('mozSistemsDailyEntries', JSON.stringify(entries));
+    }
+
+    function clearInputs() {
+      entryDateInput.value = '';
+      entryDebitAccountInput.value = '';
+      entryCreditAccountInput.value = '';
+      entryCostCenterInput.value = '';
+      entryDescriptionInput.value = '';
+      entryDebitAmountInput.value = '';
+      entryCreditAmountInput.value = '';
+      editingIndex = null;
+      addEntryButton.textContent = 'Adicionar';
+      setEditModeIndicator('');
+      entryDateInput.focus();
+    }
+
+    function addEntry() {
+      const debitAmount = parseFloat(entryDebitAmountInput.value) || 0;
+      const creditAmount = parseFloat(entryCreditAmountInput.value) || 0;
+      const debitAccount = getAccountDisplay(entryDebitAccountInput.value);
+      const creditAccount = getAccountDisplay(entryCreditAccountInput.value);
+      const costCenter = entryCostCenterInput.value.trim();
+      const description = entryDescriptionInput.value.trim();
+
+      if (!entryDateInput.value || !debitAccount || !creditAccount || !costCenter || !description || debitAmount === 0 || creditAmount === 0) {
+        showFormMessage('Preencha Data, Conta a Debitar, Conta a Creditar, Centro/Código, Descrição e valores iguais de Débito e Crédito.', 'error');
+        return;
+      }
+
+      if (!isValidPlanAccount(debitAccount) || !isValidPlanAccount(creditAccount)) {
+        showFormMessage('Conta a Debitar e Conta a Creditar devem estar no Plano Geral de Contas.', 'error');
+        return;
+      }
+
+      if (debitAmount !== creditAmount) {
+        showFormMessage('O valor de Débito deve ser igual ao valor de Crédito para que a escritura fique equilibrada.', 'error');
+        return;
+      }
+
+      const selectedDate = new Date(entryDateInput.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate > today) {
+        showFormMessage('A data não pode ser futura.', 'error');
+        return;
+      }
+
+      if (debitAccount.toLowerCase() === creditAccount.toLowerCase()) {
+        showFormMessage('Conta a Debitar e Conta a Creditar não podem ser iguais.', 'error');
+        return;
+      }
+
+      const nextNumber = entries.length + 1;
+      const entry = {
+        number: formatEntryNumber(nextNumber),
+        date: entryDateInput.value,
+        debitAccount: entryDebitAccountInput.value.trim(),
+        creditAccount: entryCreditAccountInput.value.trim(),
+        costCenter: entryCostCenterInput.value.trim() || '-',
+        description: entryDescriptionInput.value.trim(),
+        debitAmount,
+        creditAmount,
+        nirf: buildEntryNirf(debitAccount, creditAccount)
+      };
+
+      if (editingIndex !== null) {
+        const existingNumber = entries[editingIndex].number;
+        entries[editingIndex] = { ...entry, number: existingNumber };
+        showFormMessage('Lançamento atualizado com sucesso.', 'success');
+      } else {
+        entries.push(entry);
+        showFormMessage('Lançamento adicionado com sucesso.', 'success');
+      }
+      saveEntries(entries);
+      renderEntries(entries);
+      clearInputs();
+    }
+
+    const entries = loadEntries();
+    renderEntries(entries);
+
+    addEntryButton.addEventListener('click', addEntry);
+    clearEntryButton.addEventListener('click', clearInputs);
+    clearAllButton.addEventListener('click', clearAllEntries);
+    exportCsvButton.addEventListener('click', exportCsv);
+    printReportButton.addEventListener('click', () => {
+      printReport();
+      showReportMessage('Relatório pronto para impressão.', 'success');
+    });
+    clearFiltersButton.addEventListener('click', clearFilters);
+    balanceteContaPeriodoButton.addEventListener('click', () => {
+      generateBalanceteContaPeriodo(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Balancete por Conta + Período gerado.', 'success');
+    });
+
+    entryDebitAmountInput.addEventListener('input', () => {
+      if (entryDebitAmountInput.value && Number(entryDebitAmountInput.value) > 0 && !entryCreditAmountInput.value) {
+        entryCreditAmountInput.value = entryDebitAmountInput.value;
+      }
+    });
+
+    entryCreditAmountInput.addEventListener('input', () => {
+      if (entryCreditAmountInput.value && Number(entryCreditAmountInput.value) > 0 && !entryDebitAmountInput.value) {
+        entryDebitAmountInput.value = entryCreditAmountInput.value;
+      }
+    });
+
+    entryCreditAmountInput.addEventListener('keypress', event => {
+      if (event.key === 'Enter') {
+        addEntry();
+        event.preventDefault();
+      }
+    });
+
+    const balanceteTable = document.getElementById('balancete-table');
+    const balanceteThead = document.getElementById('balancete-thead');
+    const balanceteTbody = document.getElementById('balancete-tbody');
+    const balanceteSummary = document.getElementById('balancete-summary');
+
+    function generateBalanceteVerificacao(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accounts = {};
+      sourceEntries.forEach(entry => {
+        if (!accounts[entry.debitAccount]) accounts[entry.debitAccount] = { debito: 0, credito: 0 };
+        if (!accounts[entry.creditAccount]) accounts[entry.creditAccount] = { debito: 0, credito: 0 };
+        accounts[entry.debitAccount].debito += Number(entry.debitAmount);
+        accounts[entry.creditAccount].credito += Number(entry.creditAmount);
+      });
+      balanceteThead.innerHTML = '<tr><th>Conta</th><th>Débito</th><th>Crédito</th></tr>';
+      let totalDebito = 0, totalCredito = 0;
+      balanceteTbody.innerHTML = Object.entries(accounts).map(([account, values]) => {
+        totalDebito += values.debito;
+        totalCredito += values.credito;
+        return '<tr><td>' + account + '</td><td>' + formatCurrency(values.debito) + '</td><td>' + formatCurrency(values.credito) + '</td></tr>';
+      }).join('');
+      balanceteTbody.innerHTML += '<tr style="font-weight: bold; background-color: #e2e8f0;"><td>Total</td><td>' + formatCurrency(totalDebito) + '</td><td>' + formatCurrency(totalCredito) + '</td></tr>';
+      balanceteSummary.textContent = 'Lançamentos exibidos: ' + sourceEntries.length + ' · Total Débito: ' + formatCurrency(totalDebito) + ' MZN · Total Crédito: ' + formatCurrency(totalCredito) + ' MZN';
+    }
+
+    function generateBalanceteSaldos(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accounts = {};
+      sourceEntries.forEach(entry => {
+        if (!accounts[entry.debitAccount]) accounts[entry.debitAccount] = 0;
+        if (!accounts[entry.creditAccount]) accounts[entry.creditAccount] = 0;
+        accounts[entry.debitAccount] += Number(entry.debitAmount);
+        accounts[entry.creditAccount] -= Number(entry.creditAmount);
+      });
+      balanceteThead.innerHTML = '<tr><th>Conta</th><th>Saldo</th></tr>';
+      let totalSaldo = 0;
+      balanceteTbody.innerHTML = Object.entries(accounts).map(([account, saldo]) => {
+        totalSaldo += saldo;
+        return '<tr><td>' + account + '</td><td>' + formatCurrency(saldo) + '</td></tr>';
+      }).join('');
+      balanceteTbody.innerHTML += '<tr style="font-weight: bold; background-color: #e2e8f0;"><td>Total</td><td>' + formatCurrency(totalSaldo) + '</td></tr>';
+      balanceteSummary.textContent = 'Lançamentos exibidos: ' + sourceEntries.length + ' · Total de Saldos: ' + formatCurrency(totalSaldo) + ' MZN';
+    }
+
+    function generateBalanceteMovimentos(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accounts = {};
+      sourceEntries.forEach(entry => {
+        if (!accounts[entry.debitAccount]) accounts[entry.debitAccount] = { debito: 0, credito: 0, saldo: 0 };
+        if (!accounts[entry.creditAccount]) accounts[entry.creditAccount] = { debito: 0, credito: 0, saldo: 0 };
+        accounts[entry.debitAccount].debito += Number(entry.debitAmount);
+        accounts[entry.creditAccount].credito += Number(entry.creditAmount);
+      });
+      Object.keys(accounts).forEach(account => {
+        accounts[account].saldo = accounts[account].debito - accounts[account].credito;
+      });
+      balanceteThead.innerHTML = '<tr><th>Conta</th><th>Débito</th><th>Crédito</th><th>Saldo</th></tr>';
+      let totalDebito = 0, totalCredito = 0, totalSaldo = 0;
+      balanceteTbody.innerHTML = Object.entries(accounts).map(([account, values]) => {
+        totalDebito += values.debito;
+        totalCredito += values.credito;
+        totalSaldo += values.saldo;
+        return '<tr><td>' + account + '</td><td>' + formatCurrency(values.debito) + '</td><td>' + formatCurrency(values.credito) + '</td><td>' + formatCurrency(values.saldo) + '</td></tr>';
+      }).join('');
+      balanceteTbody.innerHTML += '<tr style="font-weight: bold; background-color: #e2e8f0;"><td>Total</td><td>' + formatCurrency(totalDebito) + '</td><td>' + formatCurrency(totalCredito) + '</td><td>' + formatCurrency(totalSaldo) + '</td></tr>';
+      balanceteSummary.textContent = 'Lançamentos exibidos: ' + sourceEntries.length + ' · Total Débito: ' + formatCurrency(totalDebito) + ' MZN · Total Crédito: ' + formatCurrency(totalCredito) + ' MZN · Saldo Total: ' + formatCurrency(totalSaldo) + ' MZN';
+    }
+
+    function generateBalanco(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accounts = {};
+
+      sourceEntries.forEach(entry => {
+        if (!accounts[entry.debitAccount]) accounts[entry.debitAccount] = { debito: 0, credito: 0, nirf: getNirfType(entry.debitAccount) };
+        if (!accounts[entry.creditAccount]) accounts[entry.creditAccount] = { debito: 0, credito: 0, nirf: getNirfType(entry.creditAccount) };
+        accounts[entry.debitAccount].debito += Number(entry.debitAmount);
+        accounts[entry.creditAccount].credito += Number(entry.creditAmount);
+      });
+
+      const computeBalance = ({ debito, credito, nirf }) => {
+        if (nirf === 'passivo' || nirf === 'capital' || nirf === 'receita' || nirf === 'resultado') {
+          return credito - debito;
+        }
+        return debito - credito;
+      };
+
+      const balances = Object.entries(accounts).map(([account, values]) => ({
+        account,
+        nirf: values.nirf,
+        saldo: computeBalance(values)
+      }));
+
+      const ativo = balances.filter(item => item.nirf === 'activo').sort((a, b) => a.account.localeCompare(b.account));
+      const passivo = balances.filter(item => item.nirf === 'passivo').sort((a, b) => a.account.localeCompare(b.account));
+      const capital = balances.filter(item => item.nirf === 'capital').sort((a, b) => a.account.localeCompare(b.account));
+      const outros = balances.filter(item => ['custo', 'receita', 'resultado', 'desconhecido'].includes(item.nirf)).sort((a, b) => a.account.localeCompare(b.account));
+
+      const passivoCapital = [...passivo, ...capital];
+      const rows = Math.max(ativo.length, passivoCapital.length);
+
+      balanceteThead.innerHTML = '<tr><th colspan="2" style="text-align:left;">Ativo</th><th colspan="2" style="text-align:left;">Passivo / Capital</th></tr>';
+      balanceteTbody.innerHTML = '<tr><th>Conta</th><th>Saldo</th><th>Conta</th><th>Saldo</th></tr>';
+
+      let totalAtivo = 0;
+      let totalPassivo = 0;
+      let totalCapital = 0;
+
+      for (let i = 0; i < rows; i++) {
+        const ativoItem = ativo[i] || { account: '', saldo: 0 };
+        const passivoItem = passivoCapital[i] || { account: '', saldo: 0, nirf: '' };
+        totalAtivo += ativoItem.saldo;
+        if (passivoItem.nirf === 'capital') totalCapital += passivoItem.saldo;
+        else totalPassivo += passivoItem.saldo;
+
+        const passivoLabel = passivoItem.account ? passivoItem.account + (passivoItem.nirf === 'capital' ? ' (Capital)' : '') : '';
+
+        balanceteTbody.innerHTML += '<tr>' +
+          '<td>' + ativoItem.account + '</td>' +
+          '<td>' + (ativoItem.account ? formatCurrency(ativoItem.saldo) : '') + '</td>' +
+          '<td>' + passivoLabel + '</td>' +
+          '<td>' + (passivoItem.account ? formatCurrency(passivoItem.saldo) : '') + '</td>' +
+          '</tr>';
+      }
+
+      balanceteTbody.innerHTML += '<tr style="font-weight:bold; background-color: #e2e8f0;"><td>Total</td><td>' + formatCurrency(totalAtivo) + '</td><td>Total Passivo/Capital</td><td>' + formatCurrency(totalPassivo + totalCapital) + '</td></tr>';
+
+      if (outros.length) {
+        balanceteTbody.innerHTML += '<tr style="font-weight:bold; background-color: #f8fafc;"><td colspan="4">Contas não incluídas no Balancete patrimonial (Custo/Receita/Resultado)</td></tr>';
+        outros.forEach(item => {
+          balanceteTbody.innerHTML += '<tr><td colspan="2">' + item.account + ' [' + item.nirf + ']</td><td colspan="2">' + formatCurrency(item.saldo) + '</td></tr>';
+        });
+      }
+
+      balanceteSummary.textContent = 'Balanço em T gerado: ' + sourceEntries.length + ' lançamentos · Total Ativo: ' + formatCurrency(totalAtivo) + ' MZN · Total Passivo: ' + formatCurrency(totalPassivo) + ' MZN · Total Capital: ' + formatCurrency(totalCapital) + ' MZN';
+    }
+
+    function generateNirfReport(filteredEntries, categoryFilter = null) {
+      const sourceEntries = filteredEntries || entries;
+      const totals = {};
+      const ensureTotals = (category) => {
+        if (!totals[category]) totals[category] = { debito: 0, credito: 0 };
+      };
+
+      sourceEntries.forEach(entry => {
+        const nirf = entry.nirf || buildEntryNirf(entry.debitAccount, entry.creditAccount);
+
+        if (nirf.debit) {
+          ensureTotals(nirf.debit);
+          totals[nirf.debit].debito += Number(entry.debitAmount);
+        }
+        if (nirf.credit) {
+          ensureTotals(nirf.credit);
+          totals[nirf.credit].credito += Number(entry.creditAmount);
+        }
+      });
+
+      balanceteThead.innerHTML = '<tr><th>Categoria NIRF</th><th>Débito</th><th>Crédito</th><th>Saldo</th></tr>';
+      balanceteTbody.innerHTML = '';
+      let totalDebito = 0;
+      let totalCredito = 0;
+
+      Object.entries(totals).forEach(([category, values]) => {
+        if (categoryFilter && !categoryFilter.includes(category)) return;
+        const saldo = values.debito - values.credito;
+        totalDebito += values.debito;
+        totalCredito += values.credito;
+        const label = getNirfCategoryLabel(category);
+        balanceteTbody.innerHTML += '<tr><td>' + label + '</td><td>' + formatCurrency(values.debito) + '</td><td>' + formatCurrency(values.credito) + '</td><td>' + formatCurrency(saldo) + '</td></tr>';
+      });
+
+      balanceteTbody.innerHTML += '<tr style="font-weight:bold; background-color: #e2e8f0;"><td>Total</td><td>' + formatCurrency(totalDebito) + '</td><td>' + formatCurrency(totalCredito) + '</td><td>' + formatCurrency(totalDebito - totalCredito) + '</td></tr>';
+      const reportLabel = categoryFilter ? categoryFilter.map(getNirfCategoryLabel).join(' / ') : 'NIRF Geral';
+      balanceteSummary.textContent = reportLabel + ' gerado: ' + sourceEntries.length + ' lançamentos · Total Débito: ' + formatCurrency(totalDebito) + ' MZN · Total Crédito: ' + formatCurrency(totalCredito) + ' MZN';
+    }
+
+    function getFilteredEntries() {
+      return entries.filter(entry => {
+        const entryDate = new Date(entry.date);
+        if (filterStartDateInput.value) {
+          const startDate = new Date(filterStartDateInput.value);
+          if (entryDate < startDate) return false;
+        }
+        if (filterEndDateInput.value) {
+          const endDate = new Date(filterEndDateInput.value);
+          if (entryDate > endDate) return false;
+        }
+        if (filterAccountInput.value.trim()) {
+          const filter = filterAccountInput.value.trim().toLowerCase();
+          if (!entry.debitAccount.toLowerCase().includes(filter) && !entry.creditAccount.toLowerCase().includes(filter)) return false;
+        }
+        if (filterCostCenterInput.value.trim()) {
+          const filter = filterCostCenterInput.value.trim().toLowerCase();
+          if (!entry.costCenter.toLowerCase().includes(filter)) return false;
+        }
+        return true;
+      });
+    }
+
+    function generateBalancetePeriodo(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const periodos = {};
+      sourceEntries.forEach(entry => {
+        const mes = entry.date.substring(0, 7);
+        if (!periodos[mes]) periodos[mes] = { debito: 0, credito: 0 };
+        periodos[mes].debito += Number(entry.debitAmount);
+        periodos[mes].credito += Number(entry.creditAmount);
+      });
+      balanceteThead.innerHTML = '<tr><th>Período</th><th>Débito</th><th>Crédito</th><th>Saldo</th><th>Saldo Acumulado</th></tr>';
+      let totalDebito = 0, totalCredito = 0, cumulative = 0;
+      balanceteTbody.innerHTML = Object.entries(periodos).sort().map(([periodo, values]) => {
+        const saldo = values.debito - values.credito;
+        totalDebito += values.debito;
+        totalCredito += values.credito;
+        cumulative += saldo;
+        return '<tr><td>' + periodo + '</td><td>' + formatCurrency(values.debito) + '</td><td>' + formatCurrency(values.credito) + '</td><td>' + formatCurrency(saldo) + '</td><td>' + formatCurrency(cumulative) + '</td></tr>';
+      }).join('');
+      balanceteTbody.innerHTML += '<tr style="font-weight: bold; background-color: #e2e8f0;"><td>Total</td><td>' + formatCurrency(totalDebito) + '</td><td>' + formatCurrency(totalCredito) + '</td><td>' + formatCurrency(totalDebito - totalCredito) + '</td><td>' + formatCurrency(cumulative) + '</td></tr>';
+      balanceteSummary.textContent = 'Lançamentos filtrados: ' + sourceEntries.length + ' · Total Débito: ' + formatCurrency(totalDebito) + ' MZN · Total Crédito: ' + formatCurrency(totalCredito) + ' MZN · Saldo final: ' + formatCurrency(totalDebito - totalCredito) + ' MZN';
+    }
+
+    function generateBalanceteConta(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accounts = {};
+      sourceEntries.forEach(entry => {
+        if (!accounts[entry.debitAccount]) accounts[entry.debitAccount] = [];
+        if (!accounts[entry.creditAccount]) accounts[entry.creditAccount] = [];
+        accounts[entry.debitAccount].push({ date: entry.date, tipo: 'D', valor: entry.debitAmount });
+        accounts[entry.creditAccount].push({ date: entry.date, tipo: 'C', valor: entry.creditAmount });
+      });
+      balanceteThead.innerHTML = '<tr><th>Conta</th><th>Data</th><th>Tipo</th><th>Valor</th></tr>';
+      balanceteTbody.innerHTML = '';
+      Object.entries(accounts).forEach(([account, movimentos]) => {
+        movimentos.forEach((mov, idx) => {
+          balanceteTbody.innerHTML += '<tr><td>' + (idx === 0 ? account : '') + '</td><td>' + mov.date + '</td><td>' + mov.tipo + '</td><td>' + formatCurrency(mov.valor) + '</td></tr>';
+        });
+      });
+      balanceteSummary.textContent = 'Lançamentos exibidos: ' + sourceEntries.length + ' · Total de Contas: ' + Object.keys(accounts).length;
+    }
+
+    function generateBalanceteContaPeriodo(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accountsByPeriod = {};
+      sourceEntries.forEach(entry => {
+        const period = entry.date.substring(0, 7);
+        if (!accountsByPeriod[period]) accountsByPeriod[period] = {};
+        if (!accountsByPeriod[period][entry.debitAccount]) accountsByPeriod[period][entry.debitAccount] = { debito: 0, credito: 0 };
+        if (!accountsByPeriod[period][entry.creditAccount]) accountsByPeriod[period][entry.creditAccount] = { debito: 0, credito: 0 };
+        accountsByPeriod[period][entry.debitAccount].debito += Number(entry.debitAmount);
+        accountsByPeriod[period][entry.creditAccount].credito += Number(entry.creditAmount);
+      });
+
+      balanceteThead.innerHTML = '<tr><th>Período</th><th>Conta</th><th>Débito</th><th>Crédito</th><th>Saldo</th></tr>';
+      balanceteTbody.innerHTML = '';
+      let totalDebito = 0, totalCredito = 0, totalSaldo = 0;
+      Object.entries(accountsByPeriod).sort().forEach(([period, accounts]) => {
+        Object.entries(accounts).sort().forEach(([account, values]) => {
+          const saldo = values.debito - values.credito;
+          totalDebito += values.debito;
+          totalCredito += values.credito;
+          totalSaldo += saldo;
+          balanceteTbody.innerHTML += '<tr><td>' + period + '</td><td>' + account + '</td><td>' + formatCurrency(values.debito) + '</td><td>' + formatCurrency(values.credito) + '</td><td>' + formatCurrency(saldo) + '</td></tr>';
+        });
+      });
+      balanceteTbody.innerHTML += '<tr style="font-weight: bold; background-color: #e2e8f0;"><td>Total</td><td></td><td>' + formatCurrency(totalDebito) + '</td><td>' + formatCurrency(totalCredito) + '</td><td>' + formatCurrency(totalSaldo) + '</td></tr>';
+      balanceteSummary.textContent = 'Lançamentos exibidos: ' + sourceEntries.length + ' · Total Débito: ' + formatCurrency(totalDebito) + ' MZN · Total Crédito: ' + formatCurrency(totalCredito) + ' MZN · Saldo: ' + formatCurrency(totalSaldo) + ' MZN';
+    }
+
+    function generateBalanceteCusto(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const map = {};
+      sourceEntries.forEach(entry => {
+        const cc = entry.costCenter || '-';
+        const keyD = entry.debitAccount + '||' + cc;
+        const keyC = entry.creditAccount + '||' + cc;
+        if (!map[keyD]) map[keyD] = { account: entry.debitAccount, costCenter: cc, debito: 0, credito: 0 };
+        if (!map[keyC]) map[keyC] = { account: entry.creditAccount, costCenter: cc, debito: 0, credito: 0 };
+        map[keyD].debito += Number(entry.debitAmount) || 0;
+        map[keyC].credito += Number(entry.creditAmount) || 0;
+      });
+
+      balanceteThead.innerHTML = '<tr><th>Conta</th><th>Centro/Código</th><th>Débito</th><th>Crédito</th><th>Saldo</th></tr>';
+      let totalDeb = 0, totalCred = 0, totalSaldo = 0;
+      const rows = Object.values(map)
+        .sort((a,b) => (a.account + a.costCenter).localeCompare(b.account + b.costCenter))
+        .map(item => {
+          const saldo = item.debito - item.credito;
+          totalDeb += item.debito;
+          totalCred += item.credito;
+          totalSaldo += saldo;
+          return `<tr><td>${item.account}</td><td>${item.costCenter}</td><td>${formatCurrency(item.debito)}</td><td>${formatCurrency(item.credito)}</td><td>${formatCurrency(saldo)}</td></tr>`;
+        }).join('');
+
+      balanceteTbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;color:#999;padding:1rem;">Nenhum lançamento com centro de custo disponível.</td></tr>';
+      balanceteTbody.innerHTML += `<tr style="font-weight: bold; background-color: #e2e8f0;"><td>Total</td><td></td><td>${formatCurrency(totalDeb)}</td><td>${formatCurrency(totalCred)}</td><td>${formatCurrency(totalSaldo)}</td></tr>`;
+      balanceteSummary.textContent = `Lançamentos exibidos: ${sourceEntries.length} · Total Débito: ${formatCurrency(totalDeb)} MZN · Total Crédito: ${formatCurrency(totalCred)} MZN · Saldo Total: ${formatCurrency(totalSaldo)} MZN`;
+    }
+
+    function generateRazao(filteredEntries) {
+      const sourceEntries = filteredEntries || entries;
+      const accounts = {};
+
+      sourceEntries.forEach(entry => {
+        const addMovement = (account, type, amount, counterAccount) => {
+          if (!accounts[account]) accounts[account] = [];
+          accounts[account].push({
+            date: entry.date,
+            type,
+            amount,
+            counterAccount,
+            costCenter: entry.costCenter || '-',
+            description: entry.description
+          });
+        };
+
+        if (entry.debitAmount > 0) {
+          addMovement(entry.debitAccount, 'Débito', Number(entry.debitAmount), entry.creditAccount);
+        }
+        if (entry.creditAmount > 0) {
+          addMovement(entry.creditAccount, 'Crédito', Number(entry.creditAmount), entry.debitAccount);
+        }
+      });
+
+      balanceteThead.innerHTML = '<tr><th>Conta</th><th>Débito</th><th>Crédito</th><th>Saldo</th></tr>';
+      balanceteTbody.innerHTML = '';
+      let totalMovements = 0;
+
+      Object.entries(accounts).sort(([a],[b]) => a.localeCompare(b)).forEach(([account, movements]) => {
+        let accountBalance = 0;
+        let totalDebito = 0;
+        let totalCredito = 0;
+
+        balanceteTbody.innerHTML += `<tr style="background:#f1f5f9; font-weight:700;"><td colspan="4">Conta: ${account}</td></tr>`;
+        balanceteTbody.innerHTML += '<tr style="background:#e2e8f0; font-weight:700;"><td></td><td>Débito</td><td>Crédito</td><td>Saldo</td></tr>';
+
+        movements.forEach(mov => {
+          const debitCell = mov.type === 'Débito'
+            ? `${mov.date} | ${mov.description} | ${mov.counterAccount}<br><strong>${formatCurrency(mov.amount)}</strong>`
+            : '';
+          const creditCell = mov.type === 'Crédito'
+            ? `${mov.date} | ${mov.description} | ${mov.counterAccount}<br><strong>${formatCurrency(mov.amount)}</strong>`
+            : '';
+          accountBalance += mov.type === 'Débito' ? mov.amount : -mov.amount;
+          totalDebito += mov.type === 'Débito' ? mov.amount : 0;
+          totalCredito += mov.type === 'Crédito' ? mov.amount : 0;
+          totalMovements += 1;
+
+          balanceteTbody.innerHTML += `<tr><td></td><td style="vertical-align:top;">${debitCell}</td><td style="vertical-align:top;">${creditCell}</td><td>${formatCurrency(accountBalance)}</td></tr>`;
+        });
+
+        balanceteTbody.innerHTML += `<tr style="font-weight:bold; background-color:#f8fafc;"><td>Total</td><td>${formatCurrency(totalDebito)}</td><td>${formatCurrency(totalCredito)}</td><td>${formatCurrency(accountBalance)}</td></tr>`;
+      });
+
+      balanceteSummary.textContent = `Razão (T) gerado: ${Object.keys(accounts).length} contas com ${totalMovements} movimentos.`;
+    }
+
+    document.getElementById('btn-balancete-verificacao').addEventListener('click', () => {
+      generateBalanceteVerificacao(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+    });
+
+    document.getElementById('btn-balancete-saldos').addEventListener('click', () => {
+      generateBalanceteSaldos(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+    });
+
+    document.getElementById('btn-balancete-movimentos').addEventListener('click', () => {
+      generateBalanceteMovimentos(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+    });
+
+    document.getElementById('btn-balancete-periodo').addEventListener('click', () => {
+      generateBalancetePeriodo(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+    });
+
+    document.getElementById('btn-balancete-conta').addEventListener('click', () => {
+      generateBalanceteConta(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+    });
+
+    document.getElementById('btn-balancete-custo').addEventListener('click', () => {
+      generateBalanceteCusto(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+    });
+
+    razaoButton.addEventListener('click', () => {
+      generateRazao(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Razão gerado por conta com movimentos individuais.', 'success');
+    });
+
+    balancoButton.addEventListener('click', () => {
+      generateBalanco(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Balanço gerado.', 'success');
+    });
+
+    nirfGeralButton.addEventListener('click', () => {
+      generateNirfReport(getFilteredEntries());
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Relatório NIRF geral gerado.', 'success');
+    });
+
+    nirfGastosButton.addEventListener('click', () => {
+      generateNirfReport(getFilteredEntries(), ['custo']);
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Relatório NIRF de Gastos / Perdas (Classe 6) gerado.', 'success');
+    });
+
+    nirfReceitasButton.addEventListener('click', () => {
+      generateNirfReport(getFilteredEntries(), ['receita']);
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Relatório NIRF de Rendimentos / Ganhos (Classe 7) gerado.', 'success');
+    });
+
+    nirfResultadosButton.addEventListener('click', () => {
+      generateNirfReport(getFilteredEntries(), ['resultado']);
+      balanceteTable.style.display = 'table';
+      balanceteSummary.style.display = 'block';
+      showReportMessage('Relatório NIRF de Resultados (Classe 8) gerado.', 'success');
+    });
+  </script>
+</body>
+</html>
