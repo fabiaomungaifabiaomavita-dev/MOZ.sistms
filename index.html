@@ -6,30 +6,75 @@
   <title>MOZ&gt;sistems</title>
   <link rel="stylesheet" href="../css/style.css">
   <style>
-    *{
-      background-color:white;
+    /* Indentação progressiva para o Plano de Contas (1.2 > 1.2.1 > 1.2.1.1 ...) */
+    #plano-de-contas .contact-details ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.25rem 0 0.25rem 0;
     }
-    img {
-      max-width: 20%;
-      height: auto;
+    #plano-de-contas .contact-details > div > ul {
+      padding-left: 0;
+    }
+    #plano-de-contas .contact-details ul ul {
+      padding-left: 1.5rem;
+      border-left: 2px solid #e2e8f0;
+      margin-left: 0.4rem;
+    }
+    #plano-de-contas .contact-details ul ul ul {
+      border-left-color: #cbd5e1;
+    }
+    #plano-de-contas .contact-details ul ul ul ul {
+      border-left-color: #94a3b8;
+    }
+    #plano-de-contas .contact-details ul ul ul ul ul {
+      border-left-color: #64748b;
+    }
+    #plano-de-contas .contact-details li {
+      padding: 0.15rem 0;
+      line-height: 1.5;
+    }
+    /* Tabela do Livro Diário com scroll horizontal e largura mínima */
+    #entries-table-wrapper {
+      overflow-x: auto;
+    }
+    #entries-table {
+      min-width: 1100px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #entries-table th,
+    #entries-table td {
+      border: 1px solid #cbd5e1;
+      padding: 0.5rem 0.6rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    #entries-table thead th {
+      background-color: #1e293b;
+      color: #f8fafc;
+    }
+    #entries-table tbody tr:nth-child(even) {
+      background-color: #f8fafc;
     }
   </style>
 </head>
-<body style="background-image: url('./background.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+<body style="background-image: url('https://drive.google.com/uc?export=download&id=1qp5Z2PWswrEQCPxhYccrJ5GmpN9Z2Fbs'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
     <header class="site-header">
       <div class="logo">
-        <img src="./logo.png" alt="Logo da MOZ&gt;sistems" class="logo-image">
+        <img src="https://drive.google.com/uc?export=download&id=1qp5Z2PWswrEQCPxhYccrJ5GmpN9Z2Fbs" alt="Logo da MOZ&gt;sistems" class="logo-image">
+        <a href="#home">MOZ&gt;sistems</a>
+        <p class="ola">Olá, [Nome do Usuário]!</p>
       </div>
       <nav aria-label="Navegação principal">
         <ul class="main-nav">
-          <li><a href="#home">BALANCO DE ABERTURA</a></li>
+          <li><a href="#home">Início</a></li>
           <li><a href="#about">Livro Diário</a></li>
           <li><a href="#balancete">Balancete</a></li>
           <li><a href="#razao">Razão</a></li>
           <li><a href="#balanco">Balanço</a></li>
           <li><a href="#plano-de-contas">Plano de Contas</a></li>
         </ul>
-      </nav><hr>
+      </nav>
     </header>
     <section class="hero">
       <div class="hero-content">
@@ -41,42 +86,44 @@
       <div class="contact-details">
         <h3>Livro Diário</h3>
         <div id="edit-mode-indicator" style="margin-bottom: 0.75rem; font-weight: 700; color:#2563eb; min-height:1.25rem;"></div>
+        <div id="entries-table-wrapper">
         <table id="entries-table" class="entries-table">
           <thead>
             <tr>
-              <th>Número lancamento</th>
-              <th>Data</th>
+              <th style="width:80px;">Lançamento</th>
+              <th style="width:120px;">Data</th>
               <th>Conta a Debitar</th>
-              <th>Conta a Creditar</th>
-              <th>Factura/Recibo/Talao...</th>
               <th>Descrição</th>
-              <th>Débito</th>
-              <th>Crédito</th>
-              <th>Ações</th>
+              <th>Conta a Creditar</th>
+              <th>Factura/Recibo/Talao</th>
+              <th style="width:130px;"> Débito</th>
+              <th style="width:130px;">Crédito</th>
+              <th style="width:140px;">Ações</th>
             </tr>
           </thead>
           <tbody>
             <tr class="entry-input-row">
               <td><span id="entry-number-preview" style="font-weight: bold; color: #0f172a;">001</span></td>
-              <td><input class="diary-input" type="date" id="entry-date" required style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
-              <td><input class="diary-input" type="text" id="entry-debit-account" list="account-list" required placeholder="Ex: 1.1 Caixa" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
-              <td><input class="diary-input" type="text" id="entry-credit-account" list="account-list" required placeholder="Ex: 7.1 Vendas" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
-              <td><input class="diary-input" type="text" id="entry-cost-center" required placeholder="Ex: n 01023654" title="Informe o centro ou código do custo para agrupar o lançamento" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
-              <td><input class="diary-input" type="text" id="entry-description" required placeholder="Ex:P/ Venda de mercadorias" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
-              <td><input class="diary-input" type="number" id="entry-debit-amount" step="0.01" min="0" placeholder="0.00" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
-              <td><input class="diary-input" type="number" id="entry-credit-amount" step="0.01" min="0" placeholder="0.00" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;"></td>
+              <td><input class="diary-input" type="date" id="entry-date" required></td>
+              <td><input class="diary-input" type="text" id="entry-debit-account" list="account-list" required placeholder="Ex: Caixa"></td>
+              <td><input class="diary-input" type="text" id="entry-description" required placeholder="Ex: Venda de mercadorias"></td>
+              <td><input class="diary-input" type="text" id="entry-credit-account" list="account-list" required placeholder="Ex: Vendas"></td>
+              <td><input class="diary-input" type="text" id="entry-cost-center" required placeholder="Ex: Centro A" title="Informe o centro ou código do custo para agrupar o lançamento"></td>
+              <td><input class="diary-input" type="number" id="entry-debit-amount" step="0.01" min="0" placeholder="0.00"></td>
+              <td><input class="diary-input" type="number" id="entry-credit-amount" step="0.01" min="0" placeholder="0.00"></td>
               <td>
                 <button id="add-entry-button" class="button" type="button">Adicionar</button>
-                <button id="clear-entry-button" class="button" type="button" style="margin-left:0.4rem; background-color:red; color:white;">Limpar</button>
+                <button id="clear-entry-button" class="button" type="button" style="margin-left:0.4rem; background-color:#6b7280; color:white;">Limpar</button>
               </td>
             </tr>
           </tbody>
           <tbody id="entries-table-body"></tbody>
         </table>
+        </div>
         <p id="entries-summary">Total Receitas: 0,00 MZN · Total Despesas: 0,00 MZN · Saldo: 0,00 MZN</p>
-        <div id="form-status" style="margin-top:0.75rem; min-height:1.2rem; color:#d6c8c8; font-weight:600;"></div>
+        <div id="form-status" style="margin-top:0.75rem; min-height:1.2rem; color:#dc2626; font-weight:600;"></div>
         <div style="margin-top: 1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <button id="clear-all-button" class="button" type="button" style="background-color: #b8abab;">Limpar Tudo</button>
+          <button id="clear-all-button" class="button" type="button" style="background-color: #dc2626;">Limpar Tudo</button>
         </div>
       </div>
     </section>
@@ -104,29 +151,29 @@
             <input type="text" id="filter-cost-center" placeholder="Ex: Centro A" style="padding:.5rem; border-radius:.5rem; border:1px solid #cbd5e1;" />
           </label>
           <div style="display:flex; align-items:flex-end;">
-            <button id="clear-filters-button" class="button" type="button" style="background-color: red; border-radius: 5px;">Limpar Filtros</button>
+            <button id="clear-filters-button" class="button" type="button" style="background-color: #f59e0b;">Limpar Filtros</button>
           </div>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-          <button id="btn-balancete-verificacao" class="button" style="background-color: #c0c9dd;">Balancete de Verificação</button>
-          <button id="btn-balancete-saldos" class="button" style="background-color: #bac3d6;">Balancete de Saldos</button>
-          <button id="btn-balancete-movimentos" class="button" style="background-color: #b2bccf;">Balancete com Movimentos</button>
-          <button id="btn-balancete-periodo" class="button" style="background-color: #b3b9c7;">Balancete por Período</button>
-          <button id="btn-balancete-conta" class="button" style="background-color: #c3c9d4;">Balancete por Conta</button>
-          <button id="btn-balancete-conta-periodo" class="button" style="background-color: #b3b9c5;">Balancete Conta+Período</button>
-          <button id="btn-balancete-custo" class="button" style="background-color: #b5bac5;">Balancete Centro/Código por Período</button>
-          <button id="btn-razao" class="button" style="background-color: #acb3c0;">Razão</button>
-          <button id="btn-balanco" class="button" style="background-color: #b6bac4;">Balanço</button>
-          <button id="btn-export-csv" class="button" style="background-color: #cfdfd9;">Exportar CSV</button>
-          <button id="btn-print-report" class="button" style="background-color: #c2c9d3;">Imprimir Relatório</button>
+          <button id="btn-balancete-verificacao" class="button" style="background-color: #2563eb;">Balancete de Verificação</button>
+          <button id="btn-balancete-saldos" class="button" style="background-color: #2563eb;">Balancete de Saldos</button>
+          <button id="btn-balancete-movimentos" class="button" style="background-color: #2563eb;">Balancete com Movimentos</button>
+          <button id="btn-balancete-periodo" class="button" style="background-color: #2563eb;">Balancete por Período</button>
+          <button id="btn-balancete-conta" class="button" style="background-color: #2563eb;">Balancete por Conta</button>
+          <button id="btn-balancete-conta-periodo" class="button" style="background-color: #2563eb;">Balancete Conta+Período</button>
+          <button id="btn-balancete-custo" class="button" style="background-color: #2563eb;">Balancete Centro/Código por Período</button>
+          <button id="btn-razao" class="button" style="background-color: #2563eb;">Razão</button>
+          <button id="btn-balanco" class="button" style="background-color: #2563eb;">Balanço</button>
+          <button id="btn-export-csv" class="button" style="background-color: #10b981;">Exportar CSV</button>
+          <button id="btn-print-report" class="button" style="background-color: #4b5563;">Imprimir Relatório</button>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-          <button id="btn-nirf-geral" class="button" style="background-color: #cfc9dd;">Relatório NIRF Geral</button>
-          <button id="btn-nirf-gastos" class="button" style="background-color: #dfd8d8;">Gastos / Perdas (Classe 6)</button>
-          <button id="btn-nirf-receitas" class="button" style="background-color: #b6bdbc;">Rendimentos / Ganhos (Classe 7)</button>
-          <button id="btn-nirf-resultados" class="button" style="background-color: #ccd1db;">Resultados (Classe 8)</button>
+          <button id="btn-nirf-geral" class="button" style="background-color: #8b5cf6;">Relatório NIRF Geral</button>
+          <button id="btn-nirf-gastos" class="button" style="background-color: #ef4444;">Gastos / Perdas (Classe 6)</button>
+          <button id="btn-nirf-receitas" class="button" style="background-color: #14b8a6;">Rendimentos / Ganhos (Classe 7)</button>
+          <button id="btn-nirf-resultados" class="button" style="background-color: #2563eb;">Resultados (Classe 8)</button>
         </div>
-        <div id="report-status" style="margin-bottom:1rem; min-height:1.2rem; font-weight:600; color:#b8bcc4;"></div>
+        <div id="report-status" style="margin-bottom:1rem; min-height:1.2rem; font-weight:600; color:#2563eb;"></div>
         <table id="balancete-table" class="entries-table" style="display: none;">
           <thead id="balancete-thead"></thead>
           <tbody id="balancete-tbody"></tbody>
@@ -841,158 +888,20 @@
       { code: '1.2.1', label: 'Depósitos à ordem' },
       { code: '1.2.2', label: 'Depósitos com pré-aviso' },
       { code: '1.2.3', label: 'Depósitos a prazo' },
-      {code: '1.3', label: 'outros instrumentos financeiros' },
-      {code: '1.3.1', label: 'derivados'},
-      {code: '1.3.2', label: 'detidos para negociacoes'},
-      {code: '1.3.3', label: 'outros instrumentos financeiros ao justo valor atraveis dos resultados'},
-
-    
-      
-      
-      { code: '2.1', label: 'compras' },
-  { code: '2.1.1', label: 'mercadorias' },
-  { code: '2.1.2', label: 'matrias primas, auxiliares e materiais' },
-  { code: '2.1.2.1', label: 'materias primas' },
-  {code: '2.1.2.2', label: 'materiais auxiliares' },
-  {code: '2.1.2.3', label: 'materiais' },
-  { code: '2.1.3.1', label: 'combustíveis e lubrificantes' },
-  {code: '2.1.3.2', label: 'embalagens comerciais' },
-  {code: '2.1.3.3', label: 'Peças e sobressalentes' },
-  {code: '2.1.3.9', label: 'materias diversos' },
-  { code: '2.1.7', label: 'devoluçao de compras' },
-  {code: '2.1.8', label: 'descontos e abatimentos em compras' },
-      { code: '2.2', label: 'Mercadorias' },
-      {code: '2.2.1', label: 'marcadorias em transito' },
-      {code: '2.2.2', label: 'mercadorias em poder de terceiros'},
-      { code: '2.3', label: 'produtos acabados e intermmedios' },
-      {code: '2.3.1', label: 'produtos acabados em poder de terceiros'},
-      { code: '2.4', label: 'Subprodutos, Desperdícios, Resíduos e Refugos' },
-      {code: '2.4.1', label: 'subprodutos'},
-      {code: '2.4.2', label: 'desperdios, residuos e refugos'},
-      { code: '2.5', label: 'Produtos ou Serviços em Curso' },
-      { code: '2.6', label: 'Matérias-primas, Auxiliares e Materiai' },
-      {code: '2.6.1', label: 'materias primas'},
-      {code: '2.6.2', label: 'materias auxiliares'},
-      { code: '2.6.3', label: 'materiais' },
-      {code: '2.6.3.1', label: 'combustiveis e lubrificantes' },
-      {code: ' 2.7', label: 'activos biologicos'},
-      {code: '2.8', label: 'regularizacoes do invbentario'},
-
-      {code: '4.2', label: 'fornecedores'},
-      {code: '4.2.1', label: 'fornecedores c/c'},
-      { code: '4.2.2', label: 'fornecedores - titulos a pagar' },
-      {code: '4.2.9', label: 'adiatamentos a fornecedores'},
-      {code: '4.3', label: 'emprestimos obtidos'},
-      {code: '4.3.1', label: 'emprestimos bancarios'},
-      {code: '4.3.1.1', label: 'emprestimos bancarios - a curto prazo'},
-      {code: '4.3.1.2', label: 'emprestimos bancarios - a longo prazo'},
-      {code: '4.3.2', label: 'emprestimos obrigacionais'},
-      {code: '4.3.2.1', label: 'emprestimos obrigacionais - convertiveis'},
-      {code: '4.3.2.2', label: 'emprestimos obrigacionais - nao convertiveis'},
-      {code: '4.3.3', label: 'emprestimos por titulos de participacao'},
-      {code: '4.3.9', label: 'outros emprestimos obtidos'},
-      {code: '4.4', label: 'estado - dividas fiscais'},
-      {code: '4.4.1', label: ' imposto sobre o rendimento'},
-      {code: '4.4.2', label: 'pagamentos por conta'},
-      {code: '4.4.3', label: 'pagamento especial por conta'},
-      {code: '4.4.2', label: 'imposto retenção na fonte'},
-      {code: '4.4.2.1', label: 'rendimentos do trabalho dependente'},
-      {code: '4.4.2.2', label: 'rendimentos do trabalho proficionais'},
-      {code: '4.4.2.3', label: 'rendimentos de capital' },
-      {code: '4.4.2.4', label: 'rendimentos prediais'},
-      {code: '4.4.2.5', label: 'outros rendimentos' },
-      {code: '4.4.3', label: 'imposto sobre o valor acrescentado'},
-      {code: '4.4.3.1', label: 'iva suportado'},
-      {code: '4.4.3.1.1', label: 'inventarios'},
-      {code: '4.4.3.1.2', label: 'ativos tangiveis e intangiveis'},
-      {code: '4.4.3.1.3', label: 'outros bens e serviços'},
-      {code: '4.4.3.2', label: 'iva devolvível'},
-      {code: '4.4.3.2.1', label: 'iva devolvível - inventários'},
-      {code: '4.4.3.2.2', label: 'iva devolvível - ativos tangíveis e intangíveis'},
-      {code: '4.4.3.2.3', label: 'iva devolvível - outros bens e serviços'},
-      {code: '4.4.3.3', label: 'iva liquidado'},
-      {code: '4.4.3.3.1', label: 'operacoes gerais'},
-      {code: '4.4.3.3.2', label: 'auto-consumo e operações gratuitas'},
-      {code: '4.4.3.3.3', label: 'operacoes especiais'},
-      {code: '4.4.3.4', label: 'iva regularizacoes'},
-      {code: '4.4.3.4.1', label: ''},
-      {code: '4.4.3.4.2', label: '' },
-      {code: '4.4.3.4.3', label: '' },
-      {code: '4.4.3.5', label: 'iva apuramento' },
-      {code: '4.4.3.6', label: 'iva liquidacoes oficias'},
-      {code: '4.4.3.7', label: 'iva a pagar'},
-      {code: '4.4.3.8', label: 'iva a recuperar ou receber'},
-      {code: '4.4.3.9', label: 'iva a rembolsos perdidos ou compensar' },
-      {code: '4.4.4', label: 'impostos restantes'},
-      {code: '4.4.4.4.1', label: 'impostos de selo'},
-      {code: '4.4.4.4.2', label: 'impostos autarquicos de circulação' },
-      {code: '4.4.5', label: 'retificacao de impostos'},
-      {code: '4.4.6', label: 'impostos diferidos'},
-      {code: '4.4.6.1', label: 'activos por impostos deferidos'},
-      {code: '4.4.6.2', label: 'passivos por impostos defiridos'},
-      {code: '4.4.9', label: 'INSS'},
-      {code: '4.5', label: 'outros credores '},
-      {code: '4.5.1', label: 'pessoal'},
-      {code: '4.5.2', label: 'subscricoes de capital'},
-      {code: '4.5.3', label: 'obrigacoes'},
-      {code: '4.5.4', label: 'devedores - socios, acionistas ou proprietarios'},
-      {code: '4.5.5', label: 'subsidos a receber'},
-      {code: '4.5.9', label: 'devedores diversos'},
-      {code: '4.6', label: 'outros credores'},
-      {code: '4.7', label: 'perdas por imparidade de contas a receber'},
-      {code: '4.7.1', label: 'clientes'},
-      {code: '4.7.2', label: 'outros devedores'},
-      {code: '4.8', label: 'provisoes'},
-      {code: '4.8.1', label: 'processos judiciais em curso'},
-      {code: '4.8.2', label: 'acidentes no trabalho e doenças profissionais'},
-      {code: '4.8.3', label: 'impostos'},
-      {code: '4.8.4', label: 'reestruturação de negócios'},
-      {code: '4.8.5', label: 'contratos onerosos'},
-      {code: '4.8.6', label: 'garantias a clientes'},
-      {code: '4.8.7', label: 'perdas em contratos de construção'},
-      {code: '4.8.9', label: 'outras provisões'},
-      {code: '4.9', label: 'acrescimos e diferimentos'},
-      {code: '4.9.1', label: 'acréscimos de gasto'},
-      {code: '4.9.2', label: 'redimentos deferidos'},
-      {code: '4.9.3', label: 'acréscimos de rendimento'},
-      {code: '4.9.4', label: 'gastos deferidos: antecipados'},
-      {code: '5.1', label: 'Capital' },
-      {code: '5.1.1', label: 'Capital subscrito' },
-      {code: '5.1.2', label: 'Capital a subscrever' },
-      {code: '5.1.3', label: 'Capital realizado' },
-      {code: '5.1.4', label: 'Capital por realizar' },
-      {code: '5.1.5', label: 'Capital a realizar por subscrição' },
-      {code: '5.2', label: 'acoes ou contas proprias'},
-      {code: '5.3', label: 'prestacoes suplementares'},
-      {code: '5.4', label: 'premios de emissao de accoes ou quotas'},
-      {code: '5.5', label: 'reservas'},
-      {code: '5.5.1', label: 'reservas legais'},
-      {code: '5.5.2', label: 'reservas estatutárias'},
-      {code: '5.5.3', label: 'reservas livres'},
+      { code: '1.2.4', label: 'Derivados' },
+      { code: '1.2.5', label: 'Detidos para negociação' },
+      { code: '1.2.6', label: 'Outros instrumentos financeiros' },
+      { code: '2.1', label: 'Mercadorias' },
+      { code: '2.2', label: 'Matérias-primas' },
+      { code: '2.3', label: 'Materiais' },
+      { code: '2.4', label: 'Combustíveis e lubrificantes' },
+      { code: '2.5', label: 'Produtos acabados' },
+      { code: '2.6', label: 'Activos biológicos' },
+      { code: '3.1', label: 'Clientes c/c' },
+      { code: '4.1', label: 'Fornecedores c/c' },
+      { code: '5.1', label: 'Capital próprio' },
+      { code: '5.2', label: 'Reservas legais' },
       { code: '6.1', label: 'Juros suportados' },
-      {code: '6.2.1', label: 'Remunerações dos órgãos sociais' },
-      { code: '6.2.2', label: 'Remunerações dos trabalhadores' },
-      { code: '6.2.3', label: 'Encargos sobre remunerações' },
-      { code: '6.2.4', label: 'Benefícios pós-emprego' },
-      { code: '6.2.5', label: 'Ajudas de custo' },
-      {code: '6.2.6', label: 'Outras remunerações' },
-      {code: '6.3.1', label: 'Subcontratos' },
-      { code: '6.3.2', label: 'Fornecimentos e serviços' },
-      {code: '6.3.2.1', label: 'Fornecimentos' },
-      {code: '6.3.2.1.1', label: 'Água' },
-      {code: '6.3.2.1.2', label: 'Energia elétrica' },
-      {code: '6.3.2.1.3', label: 'Combustíveis' },
-      {code: '6.3.2.1.3.1', label: 'Gasóleo-viaturas ligeiras de passageiros' },
-      {code: '6.3.2.1.3.2', label: 'Gasóleo-outros' },
-      {code: '6.3.2.1.4', label: 'Outros fornecimentos' },
-      { code: '6.3.2.2', label: 'Serviços' },
-      {code: '6.3.2.2.1', label: 'Serviços de consultoria' },
-      {code: '6.3.2.3', label: 'Outros serviços' },
-      {code: '6.3.3', label: 'Outros encargos' },
-      {code: '6.3.4', label: 'Despesas de deslocação e estada' },
-      {code: '6.4', label: 'Perdas por Imparidade do Período' },
-      {code: '6.4.1', label: 'Ajustamentos de inventários para o valor realizável líquido' },
-      { code: '6.4.2', label: 'Investimentos financeiros' },
       { code: '7.1.1', label: 'Vendas de mercadorias' },
       { code: '7.2.1', label: 'Prestação de serviços' },
       { code: '8.1', label: 'Resultados Operacionais' },
@@ -1111,12 +1020,13 @@
     function renderEntries(entries) {
       entriesTableBody.innerHTML = entries.map((entry, index) => `
         <tr>
-          <td>${entry.number}</td>
+          <td style="font-weight:700;">${entry.number}</td>
           <td>${entry.date}</td>
-          <td>${entry.debitAccount}</td>
-          <td>${entry.creditAccount}</td>
-          <td>${entry.costCenter || '-'}</td>
-          <td>${entry.description}</td>
+          <td colspan="4">
+            <div style="font-weight:700;">${entry.debitAccount}</div>
+            <div style="padding-left:1.5rem; color:#475569;">${entry.description}${entry.costCenter && entry.costCenter !== '-' ? ' · ' + entry.costCenter : ''}</div>
+            <div style="padding-left:3rem; font-style:italic;">${entry.creditAccount}</div>
+          </td>
           <td>${formatCurrency(entry.debitAmount)}</td>
           <td>${formatCurrency(entry.creditAmount)}</td>
           <td style="display:flex; gap:0.4rem; flex-wrap:wrap;">
